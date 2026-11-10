@@ -1,0 +1,11 @@
+{
+  "model": "lightgbm",
+  "variant": "cloud",
+  "holiday_level": 2,
+  "config": {
+    "num_leaves": 31,
+    "min_child_samples": 24,
+    "learning_rate": 0.04,
+    "n_estimators": 500
+  }
+}

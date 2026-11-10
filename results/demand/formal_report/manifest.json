@@ -1,0 +1,218 @@
+{
+  "gam": {
+    "source": "results/demand/formal",
+    "sha256": {
+      "frozen": "23663361b08240840e25022b95ff0d6232a2522bbb1fe6ca375d38b9c18a26fc",
+      "periodic": "f11215b393e0b0784d5fa0bc892c792741e88bfb718f9876489579e94c6897c9"
+    },
+    "selected": {
+      "model": "gam",
+      "variant": "prior_extrema",
+      "config_id": 4,
+      "config": {
+        "n_knots": 5,
+        "alpha": 1
+      },
+      "mape": 2.518965714598756,
+      "mae": 199.11645800799235,
+      "elapsed_seconds": 0.307972458016593
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        3653.8159307286337,
+        13117.117967814673
+      ],
+      "periodic": [
+        3534.409050714017,
+        12947.332367684758
+      ]
+    }
+  },
+  "lightgbm": {
+    "source": "results/demand/formal",
+    "sha256": {
+      "frozen": "1e5e2348c7208978ffb36c61d4a7110484b2680a8abbcc86adf7a852a79f385a",
+      "periodic": "f31437328c0485317464b6ba6ee8909c6667e15856b5cea919613e5ca24dc8b8"
+    },
+    "selected": {
+      "model": "lightgbm",
+      "variant": "cloud",
+      "config_id": 5,
+      "config": {
+        "num_leaves": 31,
+        "min_child_samples": 24,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      "mape": 2.4461120533314795,
+      "mae": 194.14763454473876,
+      "elapsed_seconds": 1.0443341660429724
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        5316.552797083885,
+        14124.908458394086
+      ],
+      "periodic": [
+        3655.681265991407,
+        13457.155541061458
+      ]
+    }
+  },
+  "nbeats": {
+    "source": "results/demand/formal",
+    "sha256": {
+      "frozen": "d484e11558a7c7d7c2463a951f97fc9236320cc17c1d5d76f82d46a531c9119c",
+      "periodic": "879bd3d6a38d37389f44715ca90a0ca94a7eff5be1a47122028d3a9bc47f273a"
+    },
+    "selected": {
+      "model": "nbeats",
+      "config_id": 6,
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001
+      },
+      "mape": 2.0825621267835817,
+      "std": 0.02193476654881831,
+      "refit_epochs": 59,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "implementation": "neuralforecast 3.3.0",
+      "any_budget_stop": false
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        4880.252,
+        13585.226
+      ],
+      "periodic": [
+        3000.1807,
+        14170.592
+      ]
+    }
+  },
+  "tft": {
+    "source": "results/demand/formal_gpu",
+    "sha256": {
+      "frozen": "7fa3d7f873d1c5250ed4b79d25fbe227b6d8cdf16bc2e6e7c16e7a8682a988fb",
+      "periodic": "f9a15b28bca63fb997a667b46b938633ee5294564a5ad5713bab4d41b0bfce4a"
+    },
+    "selected": {
+      "model": "tft",
+      "device": "cuda",
+      "config_id": 3,
+      "config": {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      },
+      "mape": 2.096270252775542,
+      "std": 0.08597510486731597,
+      "refit_epochs": 64,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "implementation": "neuralforecast 3.3.0",
+      "any_budget_stop": false
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        5314.288,
+        13261.931
+      ],
+      "periodic": [
+        3240.6235,
+        12943.966
+      ]
+    }
+  },
+  "tcn": {
+    "source": "results/demand/formal_gpu",
+    "sha256": {
+      "frozen": "a5c0da211917ce86a9df5b70077118088940992a08285b7b34d1d429590a1911",
+      "periodic": "cf0a7503599c3eaf262ce07614089dd53020c94b5cf12b75706cc8f0eb69dff5"
+    },
+    "selected": {
+      "model": "tcn",
+      "device": "cuda",
+      "config_id": 6,
+      "config": {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      "mape": 2.415281493629482,
+      "std": 0.05082056130273586,
+      "refit_epochs": 76,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "implementation": "neuralforecast 3.3.0",
+      "any_budget_stop": false
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        4593.333,
+        13508.77
+      ],
+      "periodic": [
+        2992.2617,
+        14218.705
+      ]
+    }
+  },
+  "lstm": {
+    "source": "results/demand/formal",
+    "sha256": {
+      "frozen": "2259e8ff62d57ba78f7f77512185566fabe8a19ff760dac59ca0fd6bbd605ab2",
+      "periodic": "ad0b9b19fb5bf3538d6e2447cf978caf9c19dd9330697d960a571500714e2199"
+    },
+    "selected": {
+      "model": "lstm",
+      "config_id": 3,
+      "config": {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      },
+      "mape": 2.331140577967106,
+      "std": 0.04274080119426405,
+      "refit_epochs": 40,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "implementation": "neuralforecast 3.3.0",
+      "any_budget_stop": false
+    },
+    "forecast_rows_per_strategy": 207456,
+    "forecast_ranges": {
+      "frozen": [
+        4924.717,
+        14061.092
+      ],
+      "periodic": [
+        3266.462,
+        14159.739
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "model": "last_week",
+  "stage": "screen",
+  "train_end": 2013,
+  "seed": 42,
+  "variant": "mel_temp",
+  "epochs": null,
+  "device": "cpu",
+  "elapsed_seconds": 0.13
+}

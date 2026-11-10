@@ -1,0 +1,58 @@
+{
+  "weights": {
+    "nbeats": 0.5,
+    "lightgbm": 0.5
+  },
+  "fit_performed": false,
+  "data_sha256": "c13711002906140eaf7cc67c1ce17a49facd359cf3d1a84722aaa3ccd647752c",
+  "sources": {
+    "frozen/nbeats": {
+      "path": "results/demand/formal/backtest/nbeats/frozen_predictions.csv.gz",
+      "sha256": "d484e11558a7c7d7c2463a951f97fc9236320cc17c1d5d76f82d46a531c9119c"
+    },
+    "frozen/lightgbm": {
+      "path": "results/demand/formal/backtest/lightgbm/frozen_predictions.csv.gz",
+      "sha256": "1e5e2348c7208978ffb36c61d4a7110484b2680a8abbcc86adf7a852a79f385a"
+    },
+    "frozen/lstm": {
+      "path": "results/demand/formal/backtest/lstm/frozen_predictions.csv.gz",
+      "sha256": "2259e8ff62d57ba78f7f77512185566fabe8a19ff760dac59ca0fd6bbd605ab2"
+    },
+    "frozen/tft": {
+      "path": "results/demand/formal_gpu/backtest/tft/frozen_predictions.csv.gz",
+      "sha256": "7fa3d7f873d1c5250ed4b79d25fbe227b6d8cdf16bc2e6e7c16e7a8682a988fb"
+    },
+    "frozen/gam": {
+      "path": "results/demand/formal/backtest/gam/frozen_predictions.csv.gz",
+      "sha256": "23663361b08240840e25022b95ff0d6232a2522bbb1fe6ca375d38b9c18a26fc"
+    },
+    "frozen/tcn": {
+      "path": "results/demand/formal_gpu/backtest/tcn/frozen_predictions.csv.gz",
+      "sha256": "a5c0da211917ce86a9df5b70077118088940992a08285b7b34d1d429590a1911"
+    },
+    "periodic/nbeats": {
+      "path": "results/demand/formal/backtest/nbeats/periodic_predictions.csv.gz",
+      "sha256": "879bd3d6a38d37389f44715ca90a0ca94a7eff5be1a47122028d3a9bc47f273a"
+    },
+    "periodic/lightgbm": {
+      "path": "results/demand/formal/backtest/lightgbm/periodic_predictions.csv.gz",
+      "sha256": "f31437328c0485317464b6ba6ee8909c6667e15856b5cea919613e5ca24dc8b8"
+    },
+    "periodic/lstm": {
+      "path": "results/demand/formal/backtest/lstm/periodic_predictions.csv.gz",
+      "sha256": "ad0b9b19fb5bf3538d6e2447cf978caf9c19dd9330697d960a571500714e2199"
+    },
+    "periodic/tft": {
+      "path": "results/demand/formal_gpu/backtest/tft/periodic_predictions.csv.gz",
+      "sha256": "f9a15b28bca63fb997a667b46b938633ee5294564a5ad5713bab4d41b0bfce4a"
+    },
+    "periodic/gam": {
+      "path": "results/demand/formal/backtest/gam/periodic_predictions.csv.gz",
+      "sha256": "f11215b393e0b0784d5fa0bc892c792741e88bfb718f9876489579e94c6897c9"
+    },
+    "periodic/tcn": {
+      "path": "results/demand/formal_gpu/backtest/tcn/periodic_predictions.csv.gz",
+      "sha256": "cf0a7503599c3eaf262ce07614089dd53020c94b5cf12b75706cc8f0eb69dff5"
+    }
+  }
+}

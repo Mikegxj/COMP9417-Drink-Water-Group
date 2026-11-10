@@ -1,0 +1,10 @@
+{
+  "model": "yesterday",
+  "stage": "screen",
+  "train_end": 2013,
+  "seed": 42,
+  "variant": "prior_extrema",
+  "epochs": null,
+  "device": "cpu",
+  "elapsed_seconds": 0.15
+}

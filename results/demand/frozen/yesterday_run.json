@@ -1,0 +1,10 @@
+{
+  "model": "yesterday",
+  "stage": "frozen",
+  "train_end": 2014,
+  "seed": 42,
+  "variant": "base",
+  "epochs": null,
+  "device": "cpu",
+  "elapsed_seconds": 1.52
+}

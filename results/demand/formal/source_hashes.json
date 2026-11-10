@@ -1,0 +1,7 @@
+{
+  "experiments/formal_neural.py": "2d7fa0e0c5e40043bb4fb22b503eb615e862b761b1b490c8a1f418060a98fc75",
+  "experiments/tune_demand.py": "7dd52e96ef4440be71ec105659136fb33a0420055b1c994bc26b317cf03ca78f",
+  "experiments/formal_backtest.py": "2331b3ad3a09847cde47feccb00065a5e4c66a94804a53692c5d44cd444233a4",
+  "experiments/demand_tabular.py": "a02da88e6f671ca4e3ba116cb963d37a79927b7228a1d52da61a112a31114b91",
+  "harness/dayahead.py": "8913af39325a5fdeefa5d6a8469acd4712fc981e25192bf3545e7034da88f326"
+}

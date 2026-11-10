@@ -1,0 +1,32 @@
+{
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "config": {
+    "window": 480,
+    "width": 128,
+    "weather": true,
+    "lr": 0.001
+  },
+  "refit_epochs": 59,
+  "device": "cpu",
+  "seed_42_source": "results/demand/formal/backtest/nbeats",
+  "initial_training": "2010\u20132014",
+  "refit_years": [
+    2017,
+    2019,
+    2021,
+    2023,
+    2025
+  ],
+  "window_years": 4,
+  "python": "3.13.9",
+  "versions": {
+    "torch": "2.10.0",
+    "neuralforecast": "3.3.0",
+    "numpy": "2.3.5"
+  },
+  "data_sha256": "c13711002906140eaf7cc67c1ce17a49facd359cf3d1a84722aaa3ccd647752c"
+}

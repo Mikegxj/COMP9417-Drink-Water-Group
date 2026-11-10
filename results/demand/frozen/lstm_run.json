@@ -1,0 +1,10 @@
+{
+  "model": "lstm",
+  "stage": "frozen",
+  "train_end": 2014,
+  "seed": 42,
+  "variant": "base",
+  "epochs": 16,
+  "device": "cpu",
+  "elapsed_seconds": 24.72
+}

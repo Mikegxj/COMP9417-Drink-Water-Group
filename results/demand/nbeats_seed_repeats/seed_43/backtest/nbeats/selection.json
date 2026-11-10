@@ -1,0 +1,22 @@
+{
+  "model": "nbeats",
+  "config_id": 6,
+  "config": {
+    "window": 480,
+    "width": 128,
+    "weather": true,
+    "lr": 0.001
+  },
+  "mape": 2.0825621267835817,
+  "std": 0.02193476654881831,
+  "refit_epochs": 59,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "implementation": "neuralforecast 3.3.0",
+  "any_budget_stop": false,
+  "refit_seed": 43,
+  "device": "cpu"
+}

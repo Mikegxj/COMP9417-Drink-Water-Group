@@ -1,0 +1,24 @@
+{
+  "remote_root": "/srv/scratch/z5535967/comp9417-demand-formal",
+  "job_id": "9701171.kman.restech.unsw.edu.au",
+  "failed_setup_job": "9701137.kman.restech.unsw.edu.au",
+  "node": "k101",
+  "device": "Tesla V100-SXM2-32GB",
+  "python": "3.11.3",
+  "torch": "2.14.1+cu126",
+  "neuralforecast": "3.3.0",
+  "models": [
+    "tft",
+    "tcn"
+  ],
+  "selection_of_execution": "GPU execution chosen for compute speed before complete GPU model results; CPU partial trials preserved separately",
+  "data_sha256": "c13711002906140eaf7cc67c1ce17a49facd359cf3d1a84722aaa3ccd647752c",
+  "remote_source_sha256": {
+    "formal_neural.py": "2d7fa0e0c5e40043bb4fb22b503eb615e862b761b1b490c8a1f418060a98fc75",
+    "tune_demand.py": "7dd52e96ef4440be71ec105659136fb33a0420055b1c994bc26b317cf03ca78f",
+    "formal_backtest.py": "d80589c4a27bcbd39af21117a3c4490afa3d0805f0ce8598f333551c410ca5f1"
+  },
+  "exit_status": 0,
+  "walltime": "00:32:36",
+  "status": "completed_and_downloaded"
+}

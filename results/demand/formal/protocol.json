@@ -1,0 +1,352 @@
+{
+  "date": "2026-11-08",
+  "train": "2010–2013",
+  "validation": "2014",
+  "selection": "Top 2 after 32 epochs; three seeds; rank by mean best-checkpoint validation MAPE",
+  "neural_first_epochs": 32,
+  "neural_final_epochs": 160,
+  "neural_extension": 320,
+  "patience": 20,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "refit": "median best epoch of selected configuration; seed 42; train 2010–2014, then prior four years every two years",
+  "search": {
+    "gam": [
+      {
+        "n_knots": 3,
+        "alpha": 0.1
+      },
+      {
+        "n_knots": 3,
+        "alpha": 1
+      },
+      {
+        "n_knots": 3,
+        "alpha": 10
+      },
+      {
+        "n_knots": 5,
+        "alpha": 0.1
+      },
+      {
+        "n_knots": 5,
+        "alpha": 1
+      },
+      {
+        "n_knots": 5,
+        "alpha": 10
+      },
+      {
+        "n_knots": 7,
+        "alpha": 0.1
+      },
+      {
+        "n_knots": 7,
+        "alpha": 1
+      },
+      {
+        "n_knots": 7,
+        "alpha": 10
+      },
+      {
+        "n_knots": 9,
+        "alpha": 0.1
+      },
+      {
+        "n_knots": 9,
+        "alpha": 1
+      },
+      {
+        "n_knots": 9,
+        "alpha": 10
+      }
+    ],
+    "lightgbm": [
+      {
+        "num_leaves": 15,
+        "min_child_samples": 24,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 15,
+        "min_child_samples": 24,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 15,
+        "min_child_samples": 48,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 15,
+        "min_child_samples": 48,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 31,
+        "min_child_samples": 24,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 31,
+        "min_child_samples": 24,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 31,
+        "min_child_samples": 48,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 31,
+        "min_child_samples": 48,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 63,
+        "min_child_samples": 24,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 63,
+        "min_child_samples": 24,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 63,
+        "min_child_samples": 48,
+        "learning_rate": 0.02,
+        "n_estimators": 500
+      },
+      {
+        "num_leaves": 63,
+        "min_child_samples": 48,
+        "learning_rate": 0.04,
+        "n_estimators": 500
+      }
+    ],
+    "nbeats": [
+      {
+        "window": 336,
+        "width": 128,
+        "weather": false,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 128,
+        "weather": false,
+        "lr": 0.002
+      },
+      {
+        "window": 336,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 128,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 128,
+        "weather": false,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 128,
+        "weather": false,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.002
+      }
+    ],
+    "tft": [
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      }
+    ],
+    "tcn": [
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      }
+    ],
+    "lstm": [
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 336,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 16,
+        "weather": true,
+        "lr": 0.002
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.001
+      },
+      {
+        "window": 480,
+        "width": 32,
+        "weather": true,
+        "lr": 0.002
+      }
+    ]
+  },
+  "versions": {
+    "neuralforecast": "3.3.0",
+    "torch": "2.10.0",
+    "lightgbm": "4.7.0",
+    "scikit-learn": "1.7.2",
+    "numpy": "2.3.5",
+    "pandas": "2.3.3"
+  },
+  "python": "3.13.9",
+  "data_sha256": "c13711002906140eaf7cc67c1ce17a49facd359cf3d1a84722aaa3ccd647752c"
+}

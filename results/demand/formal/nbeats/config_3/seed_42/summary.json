@@ -1,0 +1,15 @@
+{
+  "config": {
+    "window": 336,
+    "width": 128,
+    "weather": true,
+    "lr": 0.002
+  },
+  "seed": 42,
+  "mape": 2.210948735152964,
+  "mae": 178.85952162372467,
+  "best_epoch": 30,
+  "epochs_run": 32,
+  "stop_reason": "budget",
+  "elapsed_seconds": 13.837798874999862
+}

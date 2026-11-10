@@ -1,0 +1,11 @@
+{
+  "config": {
+    "num_leaves": 15,
+    "min_child_samples": 48,
+    "learning_rate": 0.04,
+    "n_estimators": 500
+  },
+  "mape": 2.570782264540861,
+  "mae": 203.69128847824672,
+  "elapsed_seconds": 0.6496253330260515
+}

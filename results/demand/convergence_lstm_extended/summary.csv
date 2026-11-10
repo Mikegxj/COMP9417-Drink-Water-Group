@@ -1,0 +1,2 @@
+case,architecture,seed,epochs_run,best_epoch,val_mape,val_mae,epoch16_mape,stop_reason,elapsed_seconds,train_days,validation_days,target_mean,target_scale,max_epochs,patience,batch_size,learning_rate,loss,history_points,torch_version,source_sha256
+lstm,LSTM with lag skip inputs,42,132,112,2.2922852934229603,183.33984375,2.7652106573776964,patience,165.19790854200255,1454,365,8442.447265625,1338.6009521484375,240,20,32,0.002,MAE,336,2.10.0,02ab3bd01b11e0c5acaeb3dddf730e6b8f0520c9cdc2cd2e7dd0162668275e72

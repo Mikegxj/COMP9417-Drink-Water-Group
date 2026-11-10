@@ -1,0 +1,40 @@
+{
+  "train": "2010-2013",
+  "validation": "2014",
+  "configs": {
+    "gam": {
+      "n_knots": 5,
+      "alpha": 1
+    },
+    "lightgbm": {
+      "num_leaves": 31,
+      "min_child_samples": 24,
+      "learning_rate": 0.04,
+      "n_estimators": 500
+    }
+  },
+  "base_variants": {
+    "gam": "prior_extrema",
+    "lightgbm": "cloud"
+  },
+  "experiments": {
+    "0": "exp0 current",
+    "1": "exp1 +hol_today",
+    "2": "exp2 +hol_lag1/lag7",
+    "3": "exp3 +xmas_period"
+  },
+  "group_days": {
+    "normal": 335,
+    "after holiday (lag1/lag7)": 14,
+    "holiday": 11,
+    "xmas period": 5
+  },
+  "bootstrap": {
+    "reps": 2000,
+    "unit": "day",
+    "seed": 0
+  },
+  "holidays": "holidays.Australia(subdiv='NSW'), Bank Holiday excluded",
+  "xmas_period": "24 Dec - 2 Jan, non-public-holiday days",
+  "selection_rule": "lowest 2014 overall MAPE; ties within CI -> simpler version"
+}

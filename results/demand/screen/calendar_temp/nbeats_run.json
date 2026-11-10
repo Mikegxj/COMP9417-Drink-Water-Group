@@ -1,0 +1,10 @@
+{
+  "model": "nbeats",
+  "stage": "screen",
+  "train_end": 2013,
+  "seed": 42,
+  "variant": "calendar_temp",
+  "epochs": 16,
+  "device": "cpu",
+  "elapsed_seconds": 2.37
+}

@@ -1,0 +1,16 @@
+{
+  "config": {
+    "window": 480,
+    "width": 32,
+    "weather": true,
+    "lr": 0.002
+  },
+  "seed": 44,
+  "device": "cuda",
+  "mape": 2.576443763313938,
+  "mae": 205.07940590218323,
+  "best_epoch": 67,
+  "epochs_run": 87,
+  "stop_reason": "patience",
+  "elapsed_seconds": 21.74435354815796
+}

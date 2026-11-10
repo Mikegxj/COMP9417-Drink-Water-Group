@@ -1,0 +1,14 @@
+{
+  "detector": "rolling 28-day mean daily MAPE > quantile q of its 2014 values",
+  "calibration_model": "trained 2010-2013, same config/epochs/seed",
+  "main_quantile": 0.95,
+  "sensitivity_quantiles": [
+    0.95,
+    0.9,
+    0.99
+  ],
+  "max_retrains": 6,
+  "min_gap_days": 180,
+  "retrain_window": "last 4 years up to the signal day",
+  "initial_fit": "shared with frozen backtest"
+}

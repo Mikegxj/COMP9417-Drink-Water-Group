@@ -1,0 +1,7 @@
+model,validation_mape,seed_std,device,refit_epochs,budget_stop,config
+gam,2.518965714598756,,cpu,,False,"{""n_knots"": 5, ""alpha"": 1}"
+lightgbm,2.4461120533314795,,cpu,,False,"{""num_leaves"": 31, ""min_child_samples"": 24, ""learning_rate"": 0.04, ""n_estimators"": 500}"
+nbeats,2.0825621267835817,0.02193476654881831,cpu,59.0,False,"{""window"": 480, ""width"": 128, ""weather"": true, ""lr"": 0.001}"
+tft,2.096270252775542,0.08597510486731597,cuda,64.0,False,"{""window"": 336, ""width"": 32, ""weather"": true, ""lr"": 0.002}"
+tcn,2.415281493629482,0.05082056130273586,cuda,76.0,False,"{""window"": 480, ""width"": 32, ""weather"": true, ""lr"": 0.001}"
+lstm,2.331140577967106,0.04274080119426405,cpu,40.0,False,"{""window"": 336, ""width"": 32, ""weather"": true, ""lr"": 0.002}"

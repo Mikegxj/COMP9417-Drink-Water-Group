@@ -1,0 +1,14 @@
+{
+  "model": "lightgbm",
+  "variant": "cloud",
+  "config_id": 5,
+  "config": {
+    "num_leaves": 31,
+    "min_child_samples": 24,
+    "learning_rate": 0.04,
+    "n_estimators": 500
+  },
+  "mape": 2.4461120533314795,
+  "mae": 194.14763454473876,
+  "elapsed_seconds": 1.0443341660429724
+}

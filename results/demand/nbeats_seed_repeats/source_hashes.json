@@ -1,0 +1,5 @@
+{
+  "experiments/repeat_nbeats_backtest.py": "cb10ec1e4529901b1a3bf34b02275b34c03e56d16b9aba80ffdbcc891801dd60",
+  "experiments/formal_backtest.py": "ee12605cd877c4b1f6670d0635e25886f5c2ba937fb00e1a3634d4741b8f8c47",
+  "experiments/formal_neural.py": "2d7fa0e0c5e40043bb4fb22b503eb615e862b761b1b490c8a1f418060a98fc75"
+}

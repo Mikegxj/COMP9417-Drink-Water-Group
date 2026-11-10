@@ -1,0 +1,25 @@
+{
+  "train": "2010-2013",
+  "validation": "2014",
+  "configs": {
+    "nbeats": {
+      "window": 480,
+      "width": 128,
+      "weather": true,
+      "lr": 0.001
+    },
+    "tft": {
+      "window": 336,
+      "width": 32,
+      "weather": true,
+      "lr": 0.002
+    }
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "holiday_features": "hol_today, hol_lag1, hol_lag7 as futr_exog (calendar only)",
+  "selection_rule": "mean 2014 MAPE over seeds; differences within seed spread treated as ties"
+}

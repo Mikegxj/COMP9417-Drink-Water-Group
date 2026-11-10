@@ -1,0 +1,17 @@
+{
+  "config": {
+    "window": 336,
+    "width": 32,
+    "weather": true,
+    "lr": 0.002,
+    "holidays": true
+  },
+  "seed": 44,
+  "device": "cpu",
+  "mape": 1.934857086221193,
+  "mae": 157.51457474939355,
+  "best_epoch": 28,
+  "epochs_run": 48,
+  "stop_reason": "patience",
+  "elapsed_seconds": 944.8088402229996
+}

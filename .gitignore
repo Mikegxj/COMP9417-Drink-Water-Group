@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Large experiment outputs: keep summaries only
+results/**/*.csv.gz
+results/**/*.pt
+results/**/*.joblib
+.DS_Store
+.worktrees/

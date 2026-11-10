@@ -1,0 +1,7 @@
+strategy,period,months,wins_vs_nbeats,wins_vs_lightgbm,wins_vs_both
+frozen,2015–2024,120,113,51,44
+frozen,2025–2026.10,22,22,0,0
+frozen,全期,142,135,51,44
+periodic,2015–2024,120,108,113,101
+periodic,2025–2026.10,22,22,20,20
+periodic,全期,142,130,133,121

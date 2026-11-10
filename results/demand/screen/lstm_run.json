@@ -1,0 +1,9 @@
+{
+  "model": "lstm",
+  "stage": "screen",
+  "train_end": 2013,
+  "seed": 42,
+  "epochs": 16,
+  "device": "cpu",
+  "elapsed_seconds": 16.98
+}

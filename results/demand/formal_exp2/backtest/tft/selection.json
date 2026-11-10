@@ -1,0 +1,14 @@
+{
+  "model": "tft",
+  "config": {
+    "window": 336,
+    "width": 32,
+    "weather": true,
+    "lr": 0.002,
+    "holidays": true
+  },
+  "refit_epochs": 43,
+  "refit_seed": 42,
+  "device": "cpu",
+  "frozen_only": true
+}

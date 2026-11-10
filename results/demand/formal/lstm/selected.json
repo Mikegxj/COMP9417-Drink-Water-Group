@@ -1,0 +1,20 @@
+{
+  "model": "lstm",
+  "config_id": 3,
+  "config": {
+    "window": 336,
+    "width": 32,
+    "weather": true,
+    "lr": 0.002
+  },
+  "mape": 2.331140577967106,
+  "std": 0.04274080119426405,
+  "refit_epochs": 40,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "implementation": "neuralforecast 3.3.0",
+  "any_budget_stop": false
+}

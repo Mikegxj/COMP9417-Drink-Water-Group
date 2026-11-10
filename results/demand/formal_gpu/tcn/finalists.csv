@@ -1,0 +1,7 @@
+config_id,config,seed,device,mape,mae,best_epoch,epochs_run,stop_reason,elapsed_seconds
+7,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.002}",42,cuda,2.3930276839145734,192.37018661150648,60,80,patience,22.580491373082623
+7,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.002}",43,cuda,2.546199889468117,202.96580582013414,51,71,patience,19.445585002191365
+7,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.002}",44,cuda,2.576443763313938,205.07940590218323,67,87,patience,21.74435354815796
+6,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.001}",42,cuda,2.448144210370409,196.31001277557792,71,91,patience,23.003403203794733
+6,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.001}",43,cuda,2.356745968749879,187.91839078441603,80,100,patience,25.31088295695372
+6,"{'window': 480, 'width': 32, 'weather': True, 'lr': 0.001}",44,cuda,2.440954301768157,194.0533403509828,76,96,patience,25.90474229492247
