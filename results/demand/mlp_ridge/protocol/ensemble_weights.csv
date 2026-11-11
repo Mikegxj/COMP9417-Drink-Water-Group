@@ -1,0 +1,4 @@
+ensemble,mlp,lgbm,val 2014,ridge_vicqld
+mlp+lgbm,0.9,0.1,1.5103207716942197,
+mlp+ridge,0.8,,1.5010898590371713,0.2
+mlp+ridge+lgbm,0.75,0.1,1.4958339102765088,0.15
