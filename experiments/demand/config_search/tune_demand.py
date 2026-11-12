@@ -34,7 +34,7 @@ def configurations(name):
 def neural_trial(name, config, data, seed, folder, limit, device="cpu"):
     import torch
     from torch.nn import functional as F
-    from src.demand.neural import make_model, predict, device_batch
+    from src.demand.neural import make_model, predict, device_batch, train_loss
     torch.set_num_threads(2)
     folder.mkdir(parents=True,exist_ok=True)
     model = make_model(name,config,seed).to(device)
@@ -61,7 +61,7 @@ def neural_trial(name, config, data, seed, folder, limit, device="cpu"):
         for batch in data.train_indices[torch.randperm(len(data.train_indices))].split(32):
             optimizer.zero_grad()
             output=model(device_batch(data,batch,device)).squeeze(-1)
-            loss=F.l1_loss(output,data.target[batch].to(device))
+            loss=train_loss(data,output,batch,device)
             if not torch.isfinite(loss):
                 raise ValueError(f"Non-finite training loss in {folder}")
             loss.backward()

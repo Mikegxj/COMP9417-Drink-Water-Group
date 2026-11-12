@@ -1,0 +1,16 @@
+,mean,std
+variant,solar,solar
+group,,
+all,1.8426115434959787,
+midday&season=autumn,1.9899609675245122,
+midday&season=spring,2.5648749576016705,
+midday&season=summer,3.0097978709702855,
+midday&season=winter,2.158582032227434,
+period=evening,2.4479766570951664,
+period=midday,2.4272640698801555,
+period=morning,1.611319666358722,
+period=night,1.2170242318329805,
+season=autumn,1.550000617311399,
+season=spring,1.9034792266072347,
+season=summer,2.323896550113468,
+season=winter,1.604194102738185,

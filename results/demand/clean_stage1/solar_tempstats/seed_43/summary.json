@@ -1,0 +1,9 @@
+{
+  "variant": "solar_tempstats",
+  "seed": 43,
+  "inner_best_epoch": 76,
+  "inner_2013_mape": 2.023969289421438,
+  "inner_stop_reason": "patience",
+  "mape_2014": 1.9517531737105704,
+  "mae_2014": 158.06254096880352
+}

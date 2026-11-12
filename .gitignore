@@ -225,3 +225,13 @@ results/**/*.pt
 results/**/*.joblib
 .DS_Store
 .worktrees/
+# Local assignment kit
+/README.md
+/check_submission.py
+/data/
+/example_package/
+/harness/
+/template/
+_to_delete/
+# Katana job scripts contain personal paths
+experiments/katana/

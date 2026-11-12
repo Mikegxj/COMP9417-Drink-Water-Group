@@ -1,0 +1,22 @@
+{
+  "model": "nbeats",
+  "config": {
+    "window": 480,
+    "width": 128,
+    "weather": true,
+    "lr": 0.001,
+    "holidays": true,
+    "solar": true
+  },
+  "refit_epochs": 39,
+  "refit_seed": 45,
+  "device": "cpu",
+  "train_years": 6,
+  "refit_epochs_by_year": {
+    "2017": 26,
+    "2019": 26,
+    "2021": 26,
+    "2023": 26,
+    "2025": 26
+  }
+}

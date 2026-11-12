@@ -1,0 +1,9 @@
+{
+  "variant": "exp2",
+  "seed": 43,
+  "inner_best_epoch": 103,
+  "inner_2013_mape": 2.002795141224557,
+  "inner_stop_reason": "patience",
+  "mape_2014": 1.990899875365338,
+  "mae_2014": 162.00828919627568
+}

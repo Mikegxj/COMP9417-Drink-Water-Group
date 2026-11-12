@@ -1,0 +1,61 @@
+strategy,candidate,subset,mape
+frozen,exp2 single (mean of 3 seeds),2015–2024,4.94088820847361
+frozen,exp2 single (mean of 3 seeds),2015–2024 midday,11.0219845112565
+frozen,exp2 single (mean of 3 seeds),2025–2026.10,11.229489880026891
+frozen,exp2 single (mean of 3 seeds),2025–2026.10 midday,28.570268313576864
+frozen,exp2 single (mean of 3 seeds),overall,5.914297398262861
+frozen,exp2 single (mean of 3 seeds),overall midday,13.738273697686934
+frozen,solar single (mean of 8 seeds),2015–2024,4.943044402373577
+frozen,solar single (mean of 8 seeds),2015–2024 midday,11.191218076831566
+frozen,solar single (mean of 8 seeds),2025–2026.10,11.293292494823461
+frozen,solar single (mean of 8 seeds),2025–2026.10 midday,28.751146347743276
+frozen,solar single (mean of 8 seeds),overall,5.925995807706518
+frozen,solar single (mean of 8 seeds),overall midday,13.909309704142983
+frozen,solar 3-net mean (42-44),2015–2024,4.7377115648447115
+frozen,solar 3-net mean (42-44),2015–2024 midday,11.213910639398467
+frozen,solar 3-net mean (42-44),2025–2026.10,11.003906620429422
+frozen,solar 3-net mean (42-44),2025–2026.10 midday,28.90215951952084
+frozen,solar 3-net mean (42-44),overall,5.707652446886861
+frozen,solar 3-net mean (42-44),overall midday,13.951864943147163
+frozen,solar 8-net mean,2015–2024,4.7386051387224555
+frozen,solar 8-net mean,2015–2024 midday,11.08533716165407
+frozen,solar 8-net mean,2025–2026.10,11.119205946327314
+frozen,solar 8-net mean,2025–2026.10 midday,28.70240835720486
+frozen,solar 8-net mean,overall,5.726254824119877
+frozen,solar 8-net mean,overall midday,13.812273910803416
+frozen,exp2 seed 42 (current submission setup),2015–2024,4.788331288552112
+frozen,exp2 seed 42 (current submission setup),2015–2024 midday,10.667937231066123
+frozen,exp2 seed 42 (current submission setup),2025–2026.10,11.037428505767151
+frozen,exp2 seed 42 (current submission setup),2025–2026.10 midday,27.648507736500132
+frozen,exp2 seed 42 (current submission setup),overall,5.755625605608304
+frozen,exp2 seed 42 (current submission setup),overall midday,13.296350388894755
+periodic,exp2 single (mean of 3 seeds),2015–2024,3.1219881929552376
+periodic,exp2 single (mean of 3 seeds),2015–2024 midday,5.513894154604539
+periodic,exp2 single (mean of 3 seeds),2025–2026.10,4.5523303193922215
+periodic,exp2 single (mean of 3 seeds),2025–2026.10 midday,10.102050638149372
+periodic,exp2 single (mean of 3 seeds),overall,3.3433900630585094
+periodic,exp2 single (mean of 3 seeds),overall midday,6.2240923701277895
+periodic,solar single (mean of 8 seeds),2015–2024,2.8375591018252413
+periodic,solar single (mean of 8 seeds),2015–2024 midday,4.732266560955279
+periodic,solar single (mean of 8 seeds),2025–2026.10,3.922829026504395
+periodic,solar single (mean of 8 seeds),2025–2026.10 midday,7.610992024508838
+periodic,solar single (mean of 8 seeds),overall,3.0055474358396683
+periodic,solar single (mean of 8 seeds),overall midday,5.177862890228146
+periodic,solar 3-net mean (42-44),2015–2024,2.6304348070008325
+periodic,solar 3-net mean (42-44),2015–2024 midday,4.422376246284412
+periodic,solar 3-net mean (42-44),2025–2026.10,3.692639815285958
+periodic,solar 3-net mean (42-44),2025–2026.10 midday,7.153613795538542
+periodic,solar 3-net mean (42-44),overall,2.794852935307808
+periodic,solar 3-net mean (42-44),overall midday,4.845143002520186
+periodic,solar 8-net mean,2015–2024,2.5973266865274605
+periodic,solar 8-net mean,2015–2024 midday,4.481313425195843
+periodic,solar 8-net mean,2025–2026.10,3.57818739173206
+periodic,solar 8-net mean,2025–2026.10 midday,6.9873839591016145
+periodic,solar 8-net mean,overall,2.7491535749545486
+periodic,solar 8-net mean,overall midday,4.869226703118787
+periodic,exp2 seed 42 (current submission setup),2015–2024,3.0532402731343113
+periodic,exp2 seed 42 (current submission setup),2015–2024 midday,5.309133661531677
+periodic,exp2 seed 42 (current submission setup),2025–2026.10,4.497936970638478
+periodic,exp2 seed 42 (current submission setup),2025–2026.10 midday,9.80112540027274
+periodic,exp2 seed 42 (current submission setup),overall,3.2768640793884263
+periodic,exp2 seed 42 (current submission setup),overall midday,6.004446589161889

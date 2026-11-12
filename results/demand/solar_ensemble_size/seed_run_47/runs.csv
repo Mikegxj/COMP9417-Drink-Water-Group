@@ -1,0 +1,2 @@
+variant,seed,mape,best_epoch,stop_reason,elapsed_seconds
+solar,47,1.814195876599942,99,patience,97.74159083294217

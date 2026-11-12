@@ -1,0 +1,9 @@
+{
+  "variant": "solar_mape",
+  "seed": 44,
+  "inner_best_epoch": 23,
+  "inner_2013_mape": 1.9621261405235353,
+  "inner_stop_reason": "patience",
+  "mape_2014": 2.070774156325695,
+  "mae_2014": 167.07083515156785
+}

@@ -1,0 +1,127 @@
+{
+  "inner": "train 2010-2012, early stopping on 2013 (cap 160/320, patience 20)",
+  "refit": "2010-2013 for the inner best epoch, same seed",
+  "evaluation": "2014 only, not used for any choice",
+  "section18_rule": "backtest a change unless its 2014 3-net paired CI lies entirely above 0",
+  "variants": {
+    "exp2": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "solar": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true
+      },
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ]
+    },
+    "solar_level": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true,
+        "level": true
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "solar_mape": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true,
+        "loss": "mape"
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "solar_rh": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true,
+        "rh": true
+      },
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ]
+    },
+    "solar_xmas": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true,
+        "xmas": true
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "solar_tempstats": {
+      "config": {
+        "window": 480,
+        "width": 128,
+        "weather": true,
+        "lr": 0.001,
+        "holidays": true,
+        "solar": true,
+        "tempstats": true
+      },
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    }
+  }
+}

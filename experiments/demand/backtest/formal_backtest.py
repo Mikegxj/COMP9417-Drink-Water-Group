@@ -17,7 +17,7 @@ from harness import dayahead
 def neural_refit(name,config,epochs,df,start,end,eval_end,folder,device="cpu",seed=42):
     import torch
     from torch.nn import functional as F
-    from src.demand.neural import DailyWindows,make_model,predict,device_batch
+    from src.demand.neural import DailyWindows,make_model,predict,device_batch,train_loss
     torch.set_num_threads(2)
     data=DailyWindows(df,config,start,end,eval_end)
     model=make_model(name,config,seed).to(device)
@@ -33,7 +33,7 @@ def neural_refit(name,config,epochs,df,start,end,eval_end,folder,device="cpu",se
             model.train()
             for batch in data.train_indices[torch.randperm(len(data.train_indices))].split(32):
                 optimizer.zero_grad()
-                loss=F.l1_loss(model(device_batch(data,batch,device)).squeeze(-1),data.target[batch].to(device))
+                loss=train_loss(data,model(device_batch(data,batch,device)).squeeze(-1),batch,device)
                 if not torch.isfinite(loss):
                     raise ValueError("Non-finite refit loss")
                 loss.backward()
@@ -69,7 +69,9 @@ def run_model(name,df,root):
         folder=base/str(year)
         folder.mkdir(exist_ok=True)
         path=folder/"predictions.csv.gz"
-        start=pd.Timestamp("2010-01-01" if year==2015 else f"{year-4}-01-01")
+        # train_years: periodic window length in years (default 4) or "all" (expanding from 2010).
+        years=selected.get("train_years",4)
+        start=pd.Timestamp("2010-01-01" if year==2015 or years=="all" else f"{year-years}-01-01")
         end=pd.Timestamp(f"{year-1}-12-31")
         eval_end=pd.Timestamp("2026-10-31" if year in (2015,2025) else f"{year+1}-12-31")
         if path.exists():
@@ -82,7 +84,7 @@ def run_model(name,df,root):
                 pred=demand_tabular.forecast(name,x,df.nsw_demand,train,test,config)
                 pred=pd.Series(pred,index=df.index[test])
             else:
-                pred=neural_refit(name,config,selected["refit_epochs"],df,start,end,eval_end,folder,
+                pred=neural_refit(name,config,selected.get("refit_epochs_by_year",{}).get(str(year),selected["refit_epochs"]),df,start,end,eval_end,folder,
                                   selected.get("device","cpu"),selected.get("refit_seed",42))
             frame=pd.DataFrame(dict(actual=df.nsw_demand.loc[pred.index],forecast=pred))
             frame.index.name="timestamp"

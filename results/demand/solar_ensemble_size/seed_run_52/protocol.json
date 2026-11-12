@@ -1,0 +1,31 @@
+{
+  "train": "2010-2013",
+  "validation": "2014",
+  "base_config": {
+    "window": 480,
+    "width": 128,
+    "weather": true,
+    "lr": 0.001,
+    "holidays": true
+  },
+  "variants": {
+    "exp2": {},
+    "cloud": {
+      "cloud": true
+    },
+    "solar": {
+      "solar": true
+    },
+    "cloud_solar": {
+      "cloud": true,
+      "solar": true
+    }
+  },
+  "seeds": [
+    52
+  ],
+  "midday": "interval start 10:00-14:30 AEST",
+  "seasons": "by market-day month, summer = Dec-Feb",
+  "bootstrap": "paired whole-day resampling of 3-seed mean forecasts, 2000 draws, 95% percentile",
+  "selection_rule": "mean 2014 MAPE over seeds; keep the simpler version if the paired CI contains 0"
+}

@@ -1,0 +1,85 @@
+strategy,candidate,subset,mape
+frozen,exp2 single (mean of 3 seeds),2015–2024,5.046305790233752
+frozen,exp2 single (mean of 3 seeds),2015–2024 midday,11.246749474736339
+frozen,exp2 single (mean of 3 seeds),2025–2026.10,11.478250261922701
+frozen,exp2 single (mean of 3 seeds),2025–2026.10 midday,28.651854765496534
+frozen,exp2 single (mean of 3 seeds),overall,6.041902933121282
+frozen,exp2 single (mean of 3 seeds),overall midday,13.940876138206624
+frozen,solar single (mean of 8 seeds),2015–2024,4.967779551235526
+frozen,solar single (mean of 8 seeds),2015–2024 midday,11.194401149181775
+frozen,solar single (mean of 8 seeds),2025–2026.10,11.232459302973965
+frozen,solar single (mean of 8 seeds),2025–2026.10 midday,28.403675773839062
+frozen,solar single (mean of 8 seeds),overall,5.937485880229745
+frozen,solar single (mean of 8 seeds),overall midday,13.858215291684257
+frozen,solar 3-net mean (42-44),2015–2024,4.818125783770902
+frozen,solar 3-net mean (42-44),2015–2024 midday,11.246815956010558
+frozen,solar 3-net mean (42-44),2025–2026.10,11.08457218856806
+frozen,solar 3-net mean (42-44),2025–2026.10 midday,28.412699073859418
+frozen,solar 3-net mean (42-44),overall,5.7881055720192345
+frozen,solar 3-net mean (42-44),overall midday,13.903913551068609
+frozen,solar 8-net mean,2015–2024,4.749869147506771
+frozen,solar 8-net mean,2015–2024 midday,11.075754167551395
+frozen,solar 8-net mean,2025–2026.10,11.067510236353238
+frozen,solar 8-net mean,2025–2026.10 midday,28.346554544806565
+frozen,solar 8-net mean,overall,5.72777333270767
+frozen,solar 8-net mean,overall midday,13.749091847418056
+frozen,exp2 seed 42 (current submission setup),2015–2024,4.966214188170509
+frozen,exp2 seed 42 (current submission setup),2015–2024 midday,11.379318430210752
+frozen,exp2 seed 42 (current submission setup),2025–2026.10,11.242342680576645
+frozen,exp2 seed 42 (current submission setup),2025–2026.10 midday,28.59918660593289
+frozen,exp2 seed 42 (current submission setup),overall,5.9376926614281915
+frozen,exp2 seed 42 (current submission setup),overall midday,14.044772342649003
+frozen,solar+rh single (mean of 8 seeds),2015–2024,5.0414632681775995
+frozen,solar+rh single (mean of 8 seeds),2015–2024 midday,11.597352055846816
+frozen,solar+rh single (mean of 8 seeds),2025–2026.10,11.492248073857194
+frozen,solar+rh single (mean of 8 seeds),2025–2026.10 midday,29.58459744069768
+frozen,solar+rh single (mean of 8 seeds),overall,6.039976695988717
+frozen,solar+rh single (mean of 8 seeds),overall midday,14.381587863913737
+frozen,solar+rh 8-net mean,2015–2024,4.838326840785825
+frozen,solar+rh 8-net mean,2015–2024 midday,11.500321817954232
+frozen,solar+rh 8-net mean,2025–2026.10,11.314004344511641
+frozen,solar+rh 8-net mean,2025–2026.10 midday,29.533164944071352
+frozen,solar+rh 8-net mean,overall,5.840693395619831
+frozen,solar+rh 8-net mean,overall midday,14.291615675282404
+periodic,exp2 single (mean of 3 seeds),2015–2024,3.1545191674800175
+periodic,exp2 single (mean of 3 seeds),2015–2024 midday,5.699189982393103
+periodic,exp2 single (mean of 3 seeds),2025–2026.10,4.633740027499493
+periodic,exp2 single (mean of 3 seeds),2025–2026.10 midday,10.001399326735777
+periodic,exp2 single (mean of 3 seeds),overall,3.383486949838423
+periodic,exp2 single (mean of 3 seeds),overall midday,6.365126597702045
+periodic,solar single (mean of 8 seeds),2015–2024,2.871152290027964
+periodic,solar single (mean of 8 seeds),2015–2024 midday,4.7286006780585215
+periodic,solar single (mean of 8 seeds),2025–2026.10,3.8393181830652217
+periodic,solar single (mean of 8 seeds),2025–2026.10 midday,7.4811450262071375
+periodic,solar single (mean of 8 seeds),overall,3.0210141554703345
+periodic,solar single (mean of 8 seeds),overall midday,5.1546655019621355
+periodic,solar 3-net mean (42-44),2015–2024,2.6580764920510926
+periodic,solar 3-net mean (42-44),2015–2024 midday,4.498806331835658
+periodic,solar 3-net mean (42-44),2025–2026.10,3.636351992653292
+periodic,solar 3-net mean (42-44),2025–2026.10 midday,7.342015412964259
+periodic,solar 3-net mean (42-44),overall,2.809503218081373
+periodic,solar 3-net mean (42-44),overall midday,4.938905099830807
+periodic,solar 8-net mean,2015–2024,2.603236150985749
+periodic,solar 8-net mean,2015–2024 midday,4.4201433792211455
+periodic,solar 8-net mean,2025–2026.10,3.5091867981618665
+periodic,solar 8-net mean,2025–2026.10 midday,6.951462131976923
+periodic,solar 8-net mean,overall,2.7434677527814046
+periodic,solar 8-net mean,overall midday,4.811964815036419
+periodic,exp2 seed 42 (current submission setup),2015–2024,3.09413900592725
+periodic,exp2 seed 42 (current submission setup),2015–2024 midday,5.5952592931475955
+periodic,exp2 seed 42 (current submission setup),2025–2026.10,4.593690298055367
+periodic,exp2 seed 42 (current submission setup),2025–2026.10 midday,10.158164104852549
+periodic,exp2 seed 42 (current submission setup),overall,3.3262537246763726
+periodic,exp2 seed 42 (current submission setup),overall midday,6.301548816292114
+periodic,solar+rh single (mean of 8 seeds),2015–2024,2.836899139631755
+periodic,solar+rh single (mean of 8 seeds),2015–2024 midday,4.8367729950194835
+periodic,solar+rh single (mean of 8 seeds),2025–2026.10,3.8467366951059176
+periodic,solar+rh single (mean of 8 seeds),2025–2026.10 midday,7.430085239263602
+periodic,solar+rh single (mean of 8 seeds),overall,2.993211338755358
+periodic,solar+rh single (mean of 8 seeds),overall midday,5.238190369244221
+periodic,solar+rh 8-net mean,2015–2024,2.591042162857747
+periodic,solar+rh 8-net mean,2015–2024 midday,4.587465745205144
+periodic,solar+rh 8-net mean,2025–2026.10,3.5603048033266282
+periodic,solar+rh 8-net mean,2025–2026.10 midday,7.010666822289862
+periodic,solar+rh 8-net mean,overall,2.7410737932311116
+periodic,solar+rh 8-net mean,overall midday,4.9625517055405615

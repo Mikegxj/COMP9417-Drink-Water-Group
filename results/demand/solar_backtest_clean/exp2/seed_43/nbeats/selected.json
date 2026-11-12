@@ -1,0 +1,13 @@
+{
+  "model": "nbeats",
+  "config": {
+    "window": 480,
+    "width": 128,
+    "weather": true,
+    "lr": 0.001,
+    "holidays": true
+  },
+  "refit_epochs": 60,
+  "refit_seed": 43,
+  "device": "cpu"
+}
