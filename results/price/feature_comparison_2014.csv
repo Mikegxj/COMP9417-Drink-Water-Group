@@ -1,0 +1,7 @@
+Feature set,Features,XGB Accuracy (%),XGB Balanced Accuracy (%),MLP Balanced Accuracy (%),XGB − MLP (百分点)
+"(15 features, + MEL/BNE temp)",15,80.44,80.46,77.24,3.21
+"(19 features, + VIC/QLD prices)",19,80.43,80.43,77.24,3.19
+"(13 features, NSW lags)",13,80.2,80.24,77.74,2.5
+(NSW + interstate lags),21,80.22,80.22,76.21,4.0
+(9 features),9,79.42,79.51,79.32,0.18
+(5 features),5,77.55,77.62,77.98,-0.37
