@@ -51,22 +51,6 @@ The classifier uses **14 features** derived from time of day, weekday, temperatu
 | ---: | ---: | ---: | ---: | --- |
 | 300 | 3 | 5 | 0.05 | November 2024 – October 2026 |
 
-## Historical Results · Price Direction
-
-We evaluated three update strategies for the same XGBoost classifier from **January 2015 through October 2026**. The yesterday and last-week baselines provide two simple benchmarks. Balanced accuracy gives equal weight to the two price classes.
-
-| Strategy | Retrainings | Accuracy | Balanced accuracy |
-| --- | ---: | ---: | ---: |
-| **XGBoost · retrained every two years** | **6** | **77.72%** | **76.62%** |
-| Yesterday baseline | 0 | 73.81% | 73.42% |
-| XGBoost · error-triggered retraining | 6 | 73.11% | 71.17% |
-| Last-week baseline | 0 | 70.81% | 70.42% |
-| XGBoost · frozen throughout | 0 | 72.28% | 69.60% |
-
-Retraining every two years improved balanced accuracy by **7.02 percentage points** over the frozen model and **3.20 points** over the yesterday baseline. Both retraining strategies used six updates, but periodic retraining achieved **76.62%**, compared with **71.17%** for error-triggered retraining.
-
-During model selection, the tuned XGBoost achieved **80.44% balanced accuracy on the 2014 validation set**. The **76.62%** figure measures how the selected retraining strategy performed over the subsequent historical period.
-
 ## Run the Project
 
 Run the following commands from the course kit root using **Python 3.11**. Place the released dataset at `data/nem_weather_halfhourly_2010_2026.csv`.
