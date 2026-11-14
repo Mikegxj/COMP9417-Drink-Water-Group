@@ -1,6 +1,5 @@
-"""Drink Water Group: NSW demand (N-BEATSx) and price direction (relative-price XGBoost)."""
+"""Drink Water Group: NSW demand (five-seed MLP) and price direction (relative-price XGBoost)."""
 import json
-import random
 import joblib
 from pathlib import Path
 
@@ -81,130 +80,127 @@ class PriceForecaster:
                          name="nsw_price_up", dtype=int)
 
 
-N_PERIODS = PER_DAY
-COVARIATES = ["temp", "slot_sin", "slot_cos", "weekday_sin", "weekday_cos",
-              "year_sin", "year_cos", "hol_today", "hol_lag1", "hol_lag7"]
+# Demand features and network follow the team's MLP training implementation.
+P = PER_DAY
+DEMAND_WEATHER = ["syd_temp", "syd_rh", "syd_cloud", "syd_solar"]
+HISTORY_DAYS = 10
 
 
-def nsw_holidays(years):
+def market_day(index):
+    return market_days(index)
+
+
+def to_daily(frame):
+    """Return ordered market days and arrays with 48 values per day."""
+    check_grid(frame.index)
+    day = market_day(frame.index)
+    days = pd.DatetimeIndex(day.unique())
+    n = len(days)
+    if len(frame) != n * P or not (np.asarray(day).reshape(n, P) == np.asarray(days)[:, None]).all():
+        raise ValueError("Expected complete, ordered market days")
+    return days, {c: frame[c].to_numpy(float).reshape(n, P)
+                  for c in ["nsw_demand"] + DEMAND_WEATHER}
+
+
+def calendar(days):
     import holidays
-    table = holidays.Australia(subdiv="NSW", years=years)
-    return {pd.Timestamp(day) for day, name in table.items() if "Bank Holiday" not in name}
+    table = holidays.country_holidays(
+        "AU", subdiv="NSW", years=range(days.min().year - 1, days.max().year + 2)
+    )
+    m, dd = days.month.to_numpy(), days.day.to_numpy()
+    doy = days.dayofyear.to_numpy() / 365.25
+    return {"hol": np.array([d.date() in table for d in days], dtype=float),
+            "dow": days.dayofweek.to_numpy(),
+            "xmas": (((m == 12) & (dd >= 22)) | ((m == 1) & (dd <= 4))).astype(float),
+            "s1": np.sin(2 * np.pi * doy), "c1": np.cos(2 * np.pi * doy),
+            "s2": np.sin(4 * np.pi * doy), "c2": np.cos(4 * np.pi * doy)}
 
 
-def known_covariates(index, temp, scalers):
-    start = index - HALF_HOUR
-    cov = [(np.asarray(temp, dtype=np.float32) - scalers["temp_mean"]) / scalers["temp_scale"]]
-    for positions, period in [(start.hour * 2 + start.minute // 30, 48), (start.dayofweek, 7),
-                              (start.dayofyear - 1, 365.25)]:
-        cov.extend([np.sin(2 * np.pi * positions / period), np.cos(2 * np.pi * positions / period)])
-    day = start.normalize()
-    known = nsw_holidays(range(day.year.min() - 1, day.year.max() + 2))
-    for offset in (0, 1, 7):
-        shifted = day - pd.Timedelta(days=offset)
-        cov.append(np.fromiter((d in known for d in shifted), bool, len(shifted)).astype(np.float32))
-    return torch.tensor(np.column_stack(cov), dtype=torch.float32)
+def build_inputs(days, arr):
+    """Build 402 inputs using seven previous demand days and known weather."""
+    Y, T = arr["nsw_demand"], arr["syd_temp"]
+    n = len(days)
+    i = np.arange(7, n)
+    y1, y7 = i - 1, i - 7
+    level = np.lib.stride_tricks.sliding_window_view(Y.mean(axis=1), 7)[:n - 7].mean(axis=1)
+    L = level[:, None]
+    tmean = T.mean(axis=1)
+    t3 = (tmean[i] + tmean[i - 1] + tmean[i - 2]) / 3
+    cal = calendar(days)
+    blocks = [Y[y1] / L, Y[y7] / L, T[i], T[y1], arr["syd_rh"][i], arr["syd_cloud"][i],
+              arr["syd_solar"][i], arr["syd_solar"][y1],
+              np.eye(7)[cal["dow"][i]], cal["hol"][i, None], cal["hol"][y1, None], cal["hol"][y7, None],
+              np.stack([cal[k][i] for k in ("xmas", "s1", "c1", "s2", "c2")], axis=1),
+              np.stack([T.max(axis=1)[i], T.min(axis=1)[i], t3], axis=1)]
+    return np.concatenate(blocks, axis=1), level, i
 
 
-def seed_everything(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-
-
-class IdentityBasis(nn.Module):
-    def __init__(self, backcast_size, forecast_size):
+class MLP(nn.Module):
+    def __init__(self, d_in, h=256, drop=0.1):
         super().__init__()
-        self.backcast_size = backcast_size
+        self.net = nn.Sequential(
+            nn.Linear(d_in, h), nn.GELU(), nn.Dropout(drop),
+            nn.Linear(h, h), nn.GELU(), nn.Dropout(drop), nn.Linear(h, P)
+        )
 
-    def forward(self, theta):
-        backcast = theta[:, :self.backcast_size]
-        forecast = theta[:, self.backcast_size:]
-        return backcast, forecast.reshape(len(forecast), -1, 1)
-
-
-class NBEATSBlock(nn.Module):
-    def __init__(self, input_size, h, futr_input_size, mlp_units):
-        super().__init__()
-        self.futr_input_size = futr_input_size
-        width = input_size + futr_input_size * (input_size + h)
-        layers = [nn.Linear(width, mlp_units[0][0])]
-        for units in mlp_units:
-            layers += [nn.Linear(units[0], units[1]), nn.ReLU()]
-        layers.append(nn.Linear(mlp_units[-1][1], input_size + h))
-        self.layers = nn.Sequential(*layers)
-        self.basis = IdentityBasis(input_size, h)
-
-    def forward(self, insample_y, futr_exog):
-        if self.futr_input_size > 0:
-            insample_y = torch.cat((insample_y, futr_exog.reshape(len(insample_y), -1)), dim=1)
-        return self.basis(self.layers(insample_y))
-
-
-class NBEATSx(nn.Module):
-    def __init__(self, h, input_size, futr_size=0, n_stacks=3, mlp_units=None, seed=1):
-        super().__init__()
-        seed_everything(seed)
-        mlp_units = mlp_units or 3 * [[512, 512]]
-        self.blocks = nn.ModuleList([NBEATSBlock(input_size, h, futr_size, mlp_units)
-                                     for _ in range(n_stacks)])
-
-    def forward(self, windows_batch):
-        insample_y = windows_batch["insample_y"].squeeze(-1)
-        residuals = insample_y.flip(dims=(-1,))
-        mask = windows_batch["insample_mask"].squeeze(-1).flip(dims=(-1,))
-        forecast = insample_y[:, -1:, None]
-        for block in self.blocks:
-            backcast, block_forecast = block(residuals, windows_batch["futr_exog"])
-            residuals = (residuals - backcast) * mask
-            forecast = forecast + block_forecast
-        return forecast
-
-
-def build_model(config, seed):
-    torch.manual_seed(seed)
-    width = config["width"]
-    return NBEATSx(h=N_PERIODS, input_size=config["window"], futr_size=len(COVARIATES),
-                   mlp_units=[[width, width]] * 3, seed=seed)
-
-
-def make_batch(load, known):
-    history = load.unsqueeze(-1)
-    return dict(insample_y=history, insample_mask=torch.ones_like(history), futr_exog=known,
-                hist_exog=None, stat_exog=None)
+    def forward(self, x):
+        return self.net(x) + 1.0
 
 
 class Forecaster:
     def __init__(self, artifact_dir: str):
         torch.set_num_threads(2)
         directory = Path(artifact_dir)
-        with (directory / "demand_nbeatsx.json").open() as fh:
-            self.meta = json.load(fh)
-        self.model = build_model(self.meta["config"], self.meta["seed"])
-        state = torch.load(directory / "demand_nbeatsx.pt", weights_only=True, map_location="cpu")
-        self.model.load_state_dict(state)
-        self.model.eval()
+        with (directory / "config.json").open() as fh:
+            self.config = json.load(fh)
+        self.members = []
+        for seed in self.config["seeds"]:
+            net = MLP(self.config["n_inputs"])
+            state = torch.load(directory / f"mlp_seed{seed}.pt", weights_only=True, map_location="cpu")
+            net.load_state_dict(state)
+            net.eval()
+            with np.load(directory / f"scaler_seed{seed}.npz") as sc:
+                self.members.append((net, sc["mean"], sc["scale"]))
         self.price = PriceForecaster(directory)
 
     def demand(self, history, weather_next):
-        window = self.meta["config"]["window"]
-        if len(weather_next) != N_PERIODS or len(history) < window:
-            raise ValueError("Expected 48 target half-hours and at least the input window of history")
-        past = history.iloc[-window:]
-        y = past["nsw_demand"].to_numpy(dtype=np.float32)
-        temp = np.concatenate([past["syd_temp"].to_numpy(np.float32),
-                               weather_next["syd_temp"].to_numpy(np.float32)])
-        index = past.index.append(weather_next.index)
-        y = pd.Series(y).interpolate(limit_direction="both").to_numpy(np.float32)
-        temp = pd.Series(temp).interpolate(limit_direction="both").to_numpy(np.float32)
-        load = torch.tensor((y - self.meta["demand_mean"]) / self.meta["demand_scale"]).unsqueeze(0)
-        known = known_covariates(index, temp, self.meta).unsqueeze(0)
+        day = market_day(history.index)
+        tail = history.loc[day >= day.max() - pd.Timedelta(days=HISTORY_DAYS - 1),
+                           ["nsw_demand"] + DEMAND_WEATHER]
+        nxt = weather_next[DEMAND_WEATHER].copy()
+        nxt.insert(0, "nsw_demand", np.nan)
+        frame = pd.concat([tail, nxt])
+        frame[DEMAND_WEATHER] = frame[DEMAND_WEATHER].interpolate(limit_direction="both")
+        frame.iloc[:len(tail), 0] = frame["nsw_demand"].iloc[:len(tail)].interpolate(limit_direction="both")
+        days, arr = to_daily(frame)
+        if market_day(weather_next.index)[0] != day.max() + pd.Timedelta(days=1):
+            raise ValueError("weather_next must be the day after the history")
+        X, level, _ = build_inputs(days, arr)
+        x = X[-1:]
+        out = []
         with torch.inference_mode():
-            out = self.model(make_batch(load, known)).squeeze(-1).squeeze(0).numpy()
-        return out * self.meta["demand_scale"] + self.meta["demand_mean"]
+            for net, mean, scale in self.members:
+                out.append(net(torch.tensor((x - mean) / scale, dtype=torch.float32)).numpy()[0])
+        return np.mean(out, axis=0) * level[-1]
 
     def predict(self, history: pd.DataFrame, weather_next: pd.DataFrame) -> pd.DataFrame:
+        if len(weather_next) != P or len(history) < P:
+            raise ValueError("Expected 48 forecast slots and at least 48 history slots")
+        yesterday = history["nsw_demand"].to_numpy(float)[-P:]
+        try:
+            demand = self.demand(history, weather_next)
+            if demand.shape != (P,) or not np.all(np.isfinite(demand)):
+                raise ValueError("Invalid demand forecast")
+        except Exception:
+            demand = yesterday
+        try:
+            up = self.price.predict(history, weather_next).to_numpy()
+            if up.shape != (P,) or not np.isin(up, [0, 1]).all():
+                raise ValueError("Invalid price forecast")
+        except Exception:
+            last = history["nsw_price"].to_numpy(float)[-P:]
+            up = (last > np.nanmean(last)).astype(int)
         return pd.DataFrame({
-            "nsw_demand_mw": self.demand(history, weather_next).astype(float),
-            "nsw_price_up": self.price.predict(history, weather_next),
+            "nsw_demand_mw": np.clip(demand, 1.0, 19999.0).astype(float),
+            "nsw_price_up": np.asarray(up, dtype=int),
         }, index=weather_next.index)

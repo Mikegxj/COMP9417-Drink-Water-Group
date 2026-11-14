@@ -1,68 +1,77 @@
-"""Rebuild the four-year demand model and the two-year price model from the released CSV."""
+"""Rebuild the five-seed demand MLP and relative-price XGBoost from the released CSV.
+
+Run from the course kit root:
+    python submission/train.py data/nem_weather_halfhourly_2010_2026.csv
+Demand uses the latest four years. Price uses the latest two years.
+"""
 import argparse
-import joblib
 import json
+import time
 from pathlib import Path
 
-import pandas as pd
+import joblib
 import numpy as np
+import pandas as pd
 import torch
-from torch.nn import functional as F
+from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 from model import MARKET, WEATHER, MODEL_FILE, PER_DAY, market_days, price_features
-from model import build_model, known_covariates, make_batch
+from model import MLP, P, build_inputs, market_day, to_daily
 
-CONFIG = dict(window=480, width=128, weather=True, lr=0.001, holidays=True)
-EPOCHS, SEED, YEARS = 36, 42, 4
+SEEDS, EPOCHS, YEARS, BATCH = (0, 1, 2, 3, 4), 55, 4, 64
+
+
+def fit(X, R, seed):
+    torch.manual_seed(seed)
+    sc = StandardScaler().fit(X)
+    xt = torch.tensor(sc.transform(X), dtype=torch.float32)
+    rt = torch.tensor(R, dtype=torch.float32)
+    net = MLP(X.shape[1])
+    opt = torch.optim.AdamW(net.parameters(), lr=1e-3, weight_decay=1e-4)
+    g = torch.Generator().manual_seed(seed)
+    for _ in range(EPOCHS):
+        net.train()
+        perm = torch.randperm(len(xt), generator=g)
+        for b in range(0, len(xt), BATCH):
+            ib = perm[b:b + BATCH]
+            opt.zero_grad()
+            loss = (torch.abs(net(xt[ib]) - rt[ib]) / rt[ib]).mean()
+            loss.backward()
+            opt.step()
+    return net, sc
 
 
 def train_demand(csv_path, artifact_dir):
-    torch.set_num_threads(2)
+    torch.set_num_threads(4)
+    t0 = time.time()
     df = pd.read_csv(csv_path, parse_dates=["timestamp"], index_col="timestamp").sort_index()
-    days = market_days(df.index)
-    counts = days.value_counts()
-    end = counts[counts == PER_DAY].index.max()
-    start = end - pd.DateOffset(years=YEARS) + pd.Timedelta(days=1)
-    size = CONFIG["window"]
-    keep = (days >= start - pd.Timedelta(days=size // PER_DAY)) & (days <= end)
-    df, days = df.loc[keep], days[keep]
-    expected = pd.date_range(df.index[0], df.index[-1], freq="30min")
-    if not df.index.equals(expected) or not (days.value_counts() == PER_DAY).all():
-        raise ValueError("Expected complete contiguous market days in the training window")
-    train = days >= start
-    y = df.nsw_demand.to_numpy(dtype=np.float32)
-    temp = df.syd_temp.to_numpy(dtype=np.float32)
-    meta = dict(config=CONFIG, seed=SEED, epochs=EPOCHS,
-                train_start=str(start.date()), train_end=str(end.date()),
-                demand_mean=float(y[train].mean()), demand_scale=float(y[train].std()),
-                temp_mean=float(temp[train].mean()), temp_scale=float(temp[train].std()))
-
-    load = torch.tensor((y - meta["demand_mean"]) / meta["demand_scale"])
-    history = load.unfold(0, size, PER_DAY)[:-1]
-    target = load[size:].reshape(-1, PER_DAY)
-    known = known_covariates(df.index, temp, meta).unfold(0, size + PER_DAY, PER_DAY).permute(0, 2, 1)
-    indices = torch.arange(len(target))
-    model = build_model(CONFIG, SEED)
-    optimizer = torch.optim.Adam(model.parameters(), lr=CONFIG["lr"])
-    for epoch in range(EPOCHS):
-        model.train()
-        total = 0.
-        for batch in indices[torch.randperm(len(indices))].split(32):
-            optimizer.zero_grad()
-            loss = F.l1_loss(model(make_batch(history[batch], known[batch])).squeeze(-1), target[batch])
-            if not torch.isfinite(loss):
-                raise ValueError("Non-finite training loss")
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
-            optimizer.step()
-            total += loss.item() * len(batch)
-        print(f"epoch {epoch + 1}/{EPOCHS} train MAE {total / len(indices) * meta['demand_scale']:.1f} MW", flush=True)
-    artifact_dir.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), artifact_dir / "demand_nbeatsx.pt")
-    with (artifact_dir / "demand_nbeatsx.json").open("w") as fh:
-        json.dump(meta, fh, indent=2)
-    print(f"Trained on {meta['train_start']}..{meta['train_end']} ({len(indices)} days); saved to {artifact_dir}")
+    counts = market_day(df.index).value_counts()
+    complete = counts[counts == P].index
+    df = df[market_day(df.index).isin(complete)]
+    days, arr = to_daily(df)
+    X, level, i = build_inputs(days, arr)
+    R = arr["nsw_demand"][i] / level[:, None]
+    end = days[-1]
+    target_days = days[i]
+    train = np.asarray((target_days > end - pd.DateOffset(years=YEARS)) & (target_days <= end))
+    if not np.all(np.isfinite(X[train])) or not np.all(np.isfinite(R[train])):
+        raise ValueError("Non-finite values in the training window")
+    out = Path(artifact_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    for seed in SEEDS:
+        net, sc = fit(X[train], R[train], seed)
+        torch.save(net.state_dict(), out / f"mlp_seed{seed}.pt")
+        np.savez(out / f"scaler_seed{seed}.npz", mean=sc.mean_, scale=sc.scale_)
+        print(f"seed {seed} done ({time.time() - t0:.0f}s)", flush=True)
+    config = {"model": "MLP 402-256-256-48, ratio target, MAPE loss", "seeds": list(SEEDS),
+              "epochs": EPOCHS, "n_inputs": int(X.shape[1]),
+              "train_first_day": str(target_days[train][0].date()), "train_last_day": str(end.date()),
+              "train_days": int(train.sum()), "torch": torch.__version__}
+    with (out / "config.json").open("w") as fh:
+        json.dump(config, fh, indent=2)
+    print(f"Trained demand on {config['train_first_day']}..{config['train_last_day']} "
+          f"({config['train_days']} days); saved to {out}")
 
 
 def train_price(csv_path, artifact_dir):
