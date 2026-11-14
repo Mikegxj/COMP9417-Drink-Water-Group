@@ -8,7 +8,10 @@ At the end of each market day, we forecast electricity demand and price directio
 
 | Name | Student ID | Responsibilities | Contact |
 | --- | --- | --- | --- |
-| 1234 | 1234 | 1234 | 1234 |
+| Xiaojun Guo | z5698637 | Price direction (classification) | z5698637@ad.unsw.edu.au |
+| Jiaqi Huang | z5698637 | Price direction (classification) | z5698637@ad.unsw.edu.au |
+| Zixin Su | z5698637 | Demand(regression) | z5698637@ad.unsw.edu.au |
+| Ruiyang Wang | z5698637 | Demand(regression) | z5698637@ad.unsw.edu.au |
 
 ## Project Structure
 
@@ -47,9 +50,6 @@ The PyTorch model uses the previous **10 days of NSW demand** (480 half-hours), 
 
 The classifier uses **14 features** derived from time of day, weekday, temperature, historical demand and historical prices. Three features capture how the price at a given half-hour compares with yesterday’s mean. They use the price at that half-hour yesterday, the price at that half-hour last week, and the seven-day average for that half-hour. We scale these differences using yesterday’s price variability.
 
-| Trees | Maximum depth | Minimum child weight | Learning rate | Final training window |
-| ---: | ---: | ---: | ---: | --- |
-| 300 | 3 | 5 | 0.05 | November 2024 – October 2026 |
 
 ## Run the Project
 
