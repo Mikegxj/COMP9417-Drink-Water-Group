@@ -9,9 +9,9 @@ At the end of each market day, we forecast electricity demand and price directio
 | Name | Student ID | Responsibilities | Contact |
 | --- | --- | --- | --- |
 | Xiaojun Guo | z5698637 | Price direction (classification) | z5698637@ad.unsw.edu.au |
-| Jiaqi Huang | z5698637 | Price direction (classification) | z5698637@ad.unsw.edu.au |
-| Zixin Su | z5698637 | Demand(regression) | z5698637@ad.unsw.edu.au |
-| Ruiyang Wang | z5698637 | Demand(regression) | z5698637@ad.unsw.edu.au |
+| Jiaqi Huang |  | Price direction (classification) |  |
+| Zixin Su |  | Demand(regression) |  |
+| Ruiyang Wang |  | Demand(regression) |  |
 
 ## Project Structure
 
