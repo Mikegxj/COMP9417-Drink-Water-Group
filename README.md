@@ -2,7 +2,7 @@
 
 **UNSW Machine Learning · T3 2026 · Drink Water Group**
 
-At the end of each market day, we forecast electricity demand and price direction in New South Wales (NSW) for the next 48 half-hours. We use **N-BEATSx** for demand forecasting and **relative-price XGBoost** for price classification. We also study how forecast accuracy changes over time and whether retraining helps the models adapt.
+At the end of each market day, we forecast electricity demand and price direction in New South Wales (NSW) for the next 48 half-hours. We use an **MLP ensemble** for demand forecasting and **relative-price XGBoost** for price classification, and evaluate how retraining affects forecasting performance over time. We also study how forecast accuracy changes over time and whether retraining helps the models adapt.
 
 ## Team Members
 
@@ -42,13 +42,65 @@ For each forecast, the package receives market history through day D and weather
 
 ## Forecasting Models
 
-### Demand · N-BEATSx
+### Demand · MLP Ensemble
 
-The PyTorch model uses the previous **10 days of NSW demand** (480 half-hours), Sydney temperature, calendar cycles and NSW public holiday indicators. It predicts all 48 demand values for the next day in one call. We fitted the final demand model using four years of data, from **November 2022 through October 2026**.
+The demand forecaster averages predictions from **five multilayer perceptrons (MLPs)** trained with random seeds 0–4. Each network predicts all 48 half-hourly demand values for the next day.
+
+The model uses **402 input values**, including demand at the same half-hours yesterday and last week, Sydney weather, weekday indicators, NSW public holidays and seasonal features. Historical demand inputs and prediction targets are normalised by the mean demand over the previous seven days. Predictions are converted back to MW using that same mean.
+
+Each network has the architecture **402 → 256 → 256 → 48**, with GELU activations and dropout of 0.1. Input standardisation is fitted using the training window only.
+
+| Setting | Value |
+| --- | --- |
+| Ensemble | Five MLPs, seeds 0–4 |
+| Hidden layers | Two layers of 256 units |
+| Activation | GELU |
+| Dropout | 0.1 |
+| Optimiser | AdamW |
+| Learning rate | 0.001 |
+| Weight decay | 0.0001 |
+| Training epochs | 55 |
+| Batch size | 64 |
+| Training loss | Mean absolute percentage error |
+| Final training window | Most recent four years of complete market days |
+
+The final training procedure follows the periodic-retraining strategy selected during historical evaluation. If demand prediction raises an exception or produces invalid values, the package uses demand from the same half-hours yesterday.
 
 ### Price Direction · Relative-Price XGBoost
 
-The classifier uses **14 features** derived from time of day, weekday, temperature, historical demand and historical prices. Three features capture how the price at a given half-hour compares with yesterday’s mean. They use the price at that half-hour yesterday, the price at that half-hour last week, and the seven-day average for that half-hour. We scale these differences using yesterday’s price variability.
+Our price forecaster uses an **XGBoost binary classifier** to predict whether the NSW spot price in each half-hour of day D+1 will exceed the **mean NSW price on day D**. The model produces 48 predictions, with `1` indicating a price above that reference and `0` indicating a price at or below it.
+
+#### Input Features
+
+The classifier uses **14 features** combining calendar information, forecast-day temperatures and historical market observations.
+
+| Feature group | Features | Count |
+| --- | --- | ---: |
+| Calendar | Half-hour slot, weekday sine and weekday cosine | 3 |
+| Temperature | Sydney, Melbourne and Brisbane temperatures for the target half-hour | 3 |
+| Historical demand | NSW demand at the same half-hour yesterday and seven days earlier | 2 |
+| Historical price indicators | Whether the NSW price at the same half-hour yesterday and seven days earlier exceeds yesterday’s mean price | 2 |
+| Price variability | Standard deviation of NSW prices over yesterday’s 48 half-hours | 1 |
+| Relative prices | Yesterday’s price, last week’s price and the seven-day average at the same half-hour, each expressed relative to yesterday’s mean | 3 |
+| **Total** | | **14** |
+
+For each relative-price feature, we subtract yesterday’s mean NSW price from the historical price value and divide by yesterday’s price standard deviation, with a minimum denominator of 1.0. The seven-day average uses the same half-hour across the seven preceding days.
+
+This representation describes historical prices relative to the recent market level. It was designed to reduce sensitivity to changes in absolute price levels over time. All market-derived features use observations available by the end of day D, while target-day temperatures come from the supplied weather inputs.
+
+#### Model Configuration
+
+| Setting | Value |
+| --- | --- |
+| Model | XGBoost classifier |
+| Objective | Binary logistic |
+| Number of trees | 300 |
+| Maximum tree depth | 3 |
+| Minimum child weight | 5 |
+| Learning rate | 0.05 |
+| Tree construction | Histogram-based |
+| Classification threshold | 0.5 |
+| Random seed | 42 |
 
 
 ## Run the Project
