@@ -1,4 +1,4 @@
-"""Drink Water Group: NSW demand (five-seed MLP) and price direction (relative-price XGBoost)."""
+"""Drink Water Group: six-year demand MLP ensemble and two-year relative-price XGBoost."""
 import json
 import joblib
 from pathlib import Path

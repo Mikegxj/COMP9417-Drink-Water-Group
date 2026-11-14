@@ -2,7 +2,7 @@
 
 Run from the course kit root:
     python submission/train.py data/nem_weather_halfhourly_2010_2026.csv
-Demand uses the latest four years. Price uses the latest two years.
+Demand uses the latest six years. Price uses the latest two years.
 """
 import argparse
 import json
@@ -19,7 +19,7 @@ from xgboost import XGBClassifier
 from model import MARKET, WEATHER, MODEL_FILE, PER_DAY, market_days, price_features
 from model import MLP, P, build_inputs, market_day, to_daily
 
-SEEDS, EPOCHS, YEARS, BATCH = (0, 1, 2, 3, 4), 55, 4, 64
+SEEDS, EPOCHS, YEARS, BATCH = (0, 1, 2, 3, 4), 37, 6, 64
 
 
 def fit(X, R, seed):
