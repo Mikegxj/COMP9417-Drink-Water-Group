@@ -2,11 +2,11 @@
 
 1. Copies the package's model.py and train.py (features.PACKAGE: package_mlp/ locally,
    submission_mlp/ in the group repository) into a work folder and runs train.py on the CSV cut
-   at 2024-12-31, i.e. the same four-year window (2021-2024) as the 2025 refit in run_protocol.py.
+   at 2024-12-31, i.e. the same window as the experiments' 1 Jan 2025 refit (6 years: 2019-2024).
 2. Calls Forecaster.predict one day at a time (history up to day D, weather of D+1), as in
    marking, for every 5th day from 2025-01-01 to 2026-10-31.
-3. Compares with the experiment MLP (Python 3.13 / torch 2.14, outputs/protocol/predictions.npz,
-   fit "2025") on the same days.
+3. Compares with the experiment MLP (Python 3.13 / torch 2.14) refitted on 1 Jan 2025 with the same
+   window length as the package (protocol/predictions.npz or window_length/predictions_window.npz).
 Usage: python check_package_oos.py WORK_DIR
 """
 import os
@@ -36,8 +36,15 @@ sys.path.insert(0, pkg)
 import model  # noqa: E402
 
 fc = model.Forecaster(os.path.join(pkg, "artifacts"))
+import train as pkg_train  # noqa: E402  (the package's own window length)
+
 z = np.load(os.path.join(F.OUT_ROOT, "protocol", "predictions.npz"))
 exp_days = pd.DatetimeIndex(z["days"])
+if pkg_train.YEARS == 4:
+    exp_fit = z["mlp|2025"]
+else:                                     # same refit (1 Jan 2025) with the package's window length
+    exp_fit = np.load(os.path.join(F.OUT_ROOT, "window_length", "predictions_window.npz"))[f"{pkg_train.YEARS} years|2025"]
+print(f"package window: {pkg_train.YEARS} years, {pkg_train.EPOCHS} epochs", flush=True)
 targets = pd.date_range("2025-01-01", "2026-10-31", freq="5D")
 pk, ex, tr = [], [], []
 for d in targets:
@@ -46,7 +53,7 @@ for d in targets:
     weather_next = df.iloc[k * 48:(k + 1) * 48][da.WEATHER_COLS]
     pk.append(fc.predict(history, weather_next)["nsw_demand_mw"].to_numpy())
     j = exp_days.get_loc(d)
-    ex.append(z["mlp|2025"][j])
+    ex.append(exp_fit[j])
     tr.append(df["nsw_demand"].to_numpy()[k * 48:(k + 1) * 48])
 pk, ex, tr = map(np.array, (pk, ex, tr))
 m = lambda p: float(np.mean(np.abs(p - tr) / tr) * 100)  # noqa: E731

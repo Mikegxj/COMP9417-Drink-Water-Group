@@ -1,4 +1,5 @@
-"""Live-week evidence figure from outputs/liveweek/weeks.csv (run_liveweek.py).
+"""Live-week evidence figure from outputs/liveweek/weeks_6years.csv (run_liveweek.py 6: the selected
+6-year retraining window).
 
 Left: weekly MAPE of December weeks for the MLP trained up to 31 Oct of the same year, and the
 same-half-hour-yesterday baseline; the analogue week (Monday 7-13 Dec) is filled, other weeks
@@ -23,7 +24,7 @@ BLUE = "#2a78d6"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9.5, "axes.edgecolor": GRID,
                      "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2, "text.color": INK})
 
-wk = pd.read_csv(os.path.join(OUT, "weeks.csv"))
+wk = pd.read_csv(os.path.join(OUT, "weeks_6years.csv"))
 an = wk["analogue (Mon 7-13 Dec)"].astype(bool)
 a = wk[an]
 coef = np.polyfit(a.year, a["MLP MAPE"], 1)
@@ -54,7 +55,7 @@ ax1.annotate(f"analogue-week trend {coef[0]:+.2f} pp/yr\n2026 extrapolation {p26
              (2026, p26 - band), xytext=(2025.9, 0.45), ha="right", va="bottom", fontsize=8.5, color=BLUE,
              arrowprops=dict(arrowstyle="-", color=BLUE, lw=0.8))
 ax1.set_ylabel("weekly MAPE (%)")
-ax1.set_title("Weekly MAPE in December, model trained up to 31 Oct", loc="left", fontsize=9.5)
+ax1.set_title("Weekly MAPE in December, model trained on the 6 years up to 31 Oct", loc="left", fontsize=9.5)
 h = [Line2D([], [], ls="", marker="o", color=BLUE, label="MLP"),
      Line2D([], [], ls="", marker="o", color=REF, label="same half-hour yesterday"),
      Line2D([], [], ls="", marker="o", color=INK2, label="filled: week from Mon 7–13 Dec (analogue)"),

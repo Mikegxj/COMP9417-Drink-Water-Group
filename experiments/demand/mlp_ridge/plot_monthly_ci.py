@@ -1,4 +1,5 @@
-"""Monthly MAPE of the selected model (MLP), frozen and adapted (periodic retraining), with both
+"""Monthly MAPE of the selected model (MLP), frozen and adapted (periodic retraining on the previous six
+years, the selected strategy; the 4-year window as a reference line), with both
 95% intervals, and both baselines (reads outputs/protocol/metrics_by_month.csv, run_metrics_all.py).
 
 (a) frozen MLP, (b) MLP with periodic retraining (retrain dates marked), (c) width of the
@@ -40,31 +41,36 @@ fig, axes = plt.subplots(3, 1, figsize=(12, 9.6), sharex=True, gridspec_kw={"hei
 fig.patch.set_facecolor(SURFACE)
 for ax in axes:
     style(ax)
-panels = [("frozen", ORANGE, "(a) Frozen MLP (trained 2010–2014, never updated)"),
-          ("periodic", BLUE, "(b) MLP with periodic retraining (4-year window; dotted lines: retrain dates)")]
-for ax, (kind, c, title) in zip(axes[:2], panels):
+SEL = "periodic 6y (selected)"
+panels = [("frozen", ORANGE, "(a) Frozen MLP (trained 2010–2014, never updated)", "MLP, frozen"),
+          (SEL, BLUE, "(b) MLP with periodic retraining on the previous 6 years — selected strategy "
+           "(dotted lines: retrain dates)", "MLP, periodic, 6-year window")]
+for ax, (kind, c, title, lab) in zip(axes[:2], panels):
     s = m[(m.model == "MLP") & (m.strategy == kind)]
     ax.plot(lw.date, lw["MAPE (%)"], color=REF, lw=1.0, ls=(0, (1, 1.5)), label="same half-hour last week")
     ax.plot(yd.date, yd["MAPE (%)"], color=REF, lw=1.2, ls=(0, (4, 2)), label="same half-hour yesterday")
     ax.fill_between(s.date, s.boot_low, s.boot_high, color=c, alpha=0.18, lw=0, label="95% day-block bootstrap")
     ax.fill_between(s.date, s.normal_low, s.normal_high, color=c, alpha=0.45, lw=0,
                     label="95% normal approx. (half-hours independent)")
-    ax.plot(s.date, s["MAPE (%)"], color=c, lw=1.6, label=f"MLP, {kind}")
+    ax.plot(s.date, s["MAPE (%)"], color=c, lw=1.6, label=lab)
+    if kind == SEL:                                  # the earlier 4-year window, for reference
+        p4 = m[(m.model == "MLP") & (m.strategy == "periodic")]
+        ax.plot(p4.date, p4["MAPE (%)"], color=INK, lw=0.8, alpha=0.55, label="MLP, periodic, 4-year window")
     ax.set_ylabel("Monthly MAPE (%)")
     ax.set_ylim(0, 20)
     for _, r in lw[lw["MAPE (%)"] > 20].iterrows():          # clipped peaks of the weaker baseline
         ax.annotate(f"last week {r['MAPE (%)']:.1f}% ({r.month})", (r.date, 20), xytext=(-4, -2),
                     textcoords="offset points", ha="right", va="top", fontsize=8, color=INK2)
     ax.set_title(title, loc="left", fontsize=10.2)
-    h, lab = ax.get_legend_handles_labels()
-    order = [4, 3, 2, 1, 0]
-    ax.legend([h[i] for i in order], [lab[i] for i in order], loc="upper left", fontsize=8.5, ncol=2,
+    h, labs = ax.get_legend_handles_labels()
+    order = [4, 3, 2] + list(range(5, len(h))) + [1, 0]
+    ax.legend([h[i] for i in order], [labs[i] for i in order], loc="upper left", fontsize=8.5, ncol=2,
               frameon=True, facecolor=SURFACE, edgecolor="none", framealpha=1)
 for d in RETRAINS:
     axes[1].axvline(pd.Timestamp(d), color=BLUE, lw=0.9, ls=(0, (1, 2)))
-for kind, c in (("frozen", ORANGE), ("periodic", BLUE)):
+for kind, c, lab in (("frozen", ORANGE, "MLP, frozen"), (SEL, BLUE, "MLP, periodic 6-year")):
     s = m[(m.model == "MLP") & (m.strategy == kind)]
-    axes[2].plot(s.date, s.width_ratio, color=c, lw=1.2, label=f"MLP, {kind}")
+    axes[2].plot(s.date, s.width_ratio, color=c, lw=1.2, label=lab)
 axes[2].axhline(1, color=INK2, lw=0.8)
 axes[2].set_ylim(0, None)
 axes[2].set_ylabel("bootstrap width /\nnormal width")

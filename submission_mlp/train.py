@@ -3,11 +3,12 @@
 Usage:
     python train.py path/to/nem_weather_halfhourly_2010_2026.csv
 
-Demand: the MLP of model.py, refitted on the most recent four years of complete market days
-(the periodic-retraining strategy chosen from the historical simulation), with the Stage 1
-settings: 55 epochs, AdamW (lr 1e-3, weight decay 1e-4), batch 64, MAPE loss, seeds 0-4, no
-validation split. Input scaling is fitted on the training window only and saved as plain arrays.
-Takes about a minute on 4 CPU threads.
+Demand: the MLP of model.py, refitted on the most recent six years of complete market days
+(periodic retraining with a 6-year window, chosen from the historical simulation by the
+window-length test), with the Stage 1 settings except the number of epochs: 37 epochs, i.e. the
+gradient-update count of 4 years x 55 Stage 1 epochs; AdamW (lr 1e-3, weight decay 1e-4), batch 64,
+MAPE loss, seeds 0-4, no validation split. Input scaling is fitted on the training window only and
+saved as plain arrays. Takes about 1-2 minutes on 4 CPU threads (68 s measured).
 """
 import json
 import os
@@ -22,7 +23,7 @@ from sklearn.preprocessing import StandardScaler
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from model import MLP, P, build_inputs, market_day, to_daily  # noqa: E402
 
-SEEDS, EPOCHS, YEARS, BATCH = (0, 1, 2, 3, 4), 55, 4, 64
+SEEDS, EPOCHS, YEARS, BATCH = (0, 1, 2, 3, 4), 37, 6, 64
 
 
 def fit(X, R, seed):

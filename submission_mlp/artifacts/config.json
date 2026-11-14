@@ -7,10 +7,10 @@
     3,
     4
   ],
-  "epochs": 55,
+  "epochs": 37,
   "n_inputs": 402,
-  "train_first_day": "2022-11-01",
+  "train_first_day": "2020-11-01",
   "train_last_day": "2026-10-31",
-  "train_days": 1461,
+  "train_days": 2191,
   "torch": "2.15.0+cpu"
 }

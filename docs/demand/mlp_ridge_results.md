@@ -84,6 +84,7 @@ MAPE (%):
 | Model | Frozen 2015–24 | Frozen recent | Frozen full | Periodic 2015–24 | Periodic recent | **Periodic full** |
 |---|---|---|---|---|---|---|
 | MLP | 4.17 | 9.19 | 4.94 | 2.41 | 3.05 | **2.51** |
+| MLP, periodic with 6-year window (**selected strategy**, see §6) | – | – | – | 2.29 | 3.00 | **2.40** |
 | Ridge + VIC/QLD | 4.25 | 8.78 | 4.95 | 2.99 | 3.91 | 3.13 |
 | LightGBM | 3.73 | 6.71 | 4.19 | 3.22 | 4.44 | 3.41 |
 | N-BEATSx (our run, 3-seed mean) | 4.79 | 11.05 | 5.76 | 2.90 | 4.39 | 3.13 |
@@ -98,12 +99,14 @@ MAE (MW):
 | Model | Frozen 2015–24 | Frozen recent | Frozen full | Periodic 2015–24 | Periodic recent | Periodic full |
 |---|---|---|---|---|---|---|
 | MLP | 298 | 578 | 341 | 184 | 216 | **189** |
+| MLP, periodic 6-year window (selected) | – | – | – | 176 | 213 | **182** |
 | Ridge + VIC/QLD | 305 | 549 | 343 | 226 | 269 | 233 |
 | LightGBM | 278 | 424 | 300 | 244 | 304 | 254 |
 | N-BEATSx (our run, 3-seed mean) | 346 | 707 | 402 | 223 | 302 | 235 |
 | Yesterday baseline | 459 | 532 | 471 | 459 | 532 | 471 |
 | Last-week baseline | 545 | 704 | 570 | 545 | 704 | 570 |
 
+- The four-model comparison uses the shared 4-year protocol for every model; the 6-year window is a later adaptation choice for the MLP only (same rule applied to N-BEATSx keeps it at 4 years).
 - MAE ranks the four models exactly as MAPE in every period above, so the conclusions do not depend on the metric.
 - Frozen models cross the yesterday baseline: Ridge 2021, MLP 2022, N-BEATSx/TFT/TCN 2021; LightGBM, GAM, LSTM never (but 2025: 7.7/6.5/7.7 vs 8.1).
 - Against the weaker last-week baseline: frozen MLP, Ridge and LightGBM stay below it in every year (MLP 2025: 9.81 vs 10.55); frozen N-BEATSx crosses it in 2023 (8.60 vs 7.90).
@@ -154,7 +157,7 @@ File: `results/demand/mlp_ridge/protocol/ensemble_weights.csv`, `paired_differen
 - Decision: submit the 5-seed MLP alone (gain ≈ 1.5% relative is not worth two extra models; in the live-week analogue week MLP alone was better).
 
 ## 5. Degradation and drift detection
-Files: `results/demand/mlp_ridge/drift/*`; figures `results/demand/mlp_ridge/protocol/fig_monthly_ci_mlp.png` (main figure: frozen and periodic MLP with both intervals and both baselines), `fig_detectors_frozen.png`, `fig_retraining_strategies.png`, `fig_detector_v2.png` (older frozen-only version: `fig_monthly_frozen_ci.png`).
+Files: `results/demand/mlp_ridge/drift/*`; figures `results/demand/mlp_ridge/protocol/fig_monthly_ci_mlp.png` (main figure: frozen MLP and the selected strategy — periodic, 6-year window — with both intervals and both baselines; 4-year window as a reference line), `fig_detectors_frozen.png`, `fig_retraining_strategies.png`, `fig_detector_v2.png` (older frozen-only version: `fig_monthly_frozen_ci.png`).
 
 ### Monthly intervals (frozen and adapted models)
 Files: `results/demand/mlp_ridge/protocol/metrics_by_month.csv` (every model × strategy × month: MAPE, MAE, both intervals), summary `monthly_ci_width_summary.csv`.
@@ -162,19 +165,20 @@ Files: `results/demand/mlp_ridge/protocol/metrics_by_month.csv` (every model × 
 | Model | Strategy | median width, half-hours independent | median width, day-block bootstrap | ratio (median, range) | equivalent independent obs. per month |
 |---|---|---|---|---|---|
 | MLP | frozen | 0.45 | 1.18 | 2.6 (1.2–4.2) | 210 |
-| MLP | periodic | 0.24 | 0.66 | 2.8 (1.7–4.9) | 183 |
-| Ridge | frozen | 0.48 | 1.13 | 2.6 (1.5–4.3) | 220 |
-| Ridge | periodic | 0.31 | 0.94 | 2.7 (1.8–4.3) | 196 |
-| LightGBM | frozen | 0.38 | 1.16 | 3.1 (2.0–4.7) | 154 |
-| LightGBM | periodic | 0.32 | 0.94 | 3.0 (1.9–4.4) | 164 |
-| N-BEATSx | frozen | 0.53 | 1.10 | 2.4 (1.2–4.2) | 264 |
-| N-BEATSx | periodic | 0.31 | 0.90 | 2.7 (1.8–4.5) | 201 |
-| Yesterday baseline | – | 0.61 | 2.44 | 4.1 (2.3–5.2) | 87 |
-| Last-week baseline | – | 0.69 | 2.55 | 4.1 (2.3–5.7) | 88 |
+| MLP | periodic, 4-year | 0.24 | 0.65 | 2.9 (1.8–4.8) | 182 |
+| MLP | **periodic, 6-year (selected)** | 0.23 | 0.66 | 2.9 (1.7–4.7) | 164 |
+| Ridge | frozen | 0.48 | 1.15 | 2.6 (1.5–4.4) | 217 |
+| Ridge | periodic | 0.31 | 0.95 | 2.8 (1.9–4.4) | 191 |
+| LightGBM | frozen | 0.38 | 1.17 | 3.1 (2.0–4.7) | 154 |
+| LightGBM | periodic | 0.32 | 0.97 | 3.0 (1.9–4.4) | 160 |
+| N-BEATSx | frozen | 0.53 | 1.13 | 2.4 (1.2–4.2) | 259 |
+| N-BEATSx | periodic | 0.31 | 0.92 | 2.7 (1.9–4.4) | 199 |
+| Yesterday baseline | – | 0.61 | 2.42 | 4.0 (2.4–5.1) | 91 |
+| Last-week baseline | – | 0.69 | 2.51 | 4.1 (2.4–5.9) | 87 |
 
 - Equivalent independent observations ≈ n / ratio² ≈ 150–260 per month (instead of ≈1440): errors within a day are strongly correlated, so the naive interval is 2.4–3.1 times too narrow for every model, frozen or retrained. The baselines are even more correlated within a day (≈ 90): a wrong day (e.g. Monday copied from Sunday) is wrong in all 48 half-hours.
 - For the MLP, periodic retraining roughly halves the interval widths as well as the MAPE (monthly errors are smaller and less variable; Ridge/LightGBM/N-BEATSx shrink less), but the bootstrap/normal ratio stays about the same (2.6 vs 2.8): the within-day dependence is a property of day-ahead errors, not of the model's age.
-- Both intervals still treat days as independent; consecutive days are correlated (heatwaves, holidays), and week blocks give only 4–5 blocks per month. Interval values differ slightly from earlier versions of this table because the bootstrap draws changed (seeded, 1000 draws).
+- Both intervals still treat days as independent; consecutive days are correlated (heatwaves, holidays), and week blocks give only 4–5 blocks per month. Each model/strategy now uses the same seeded bootstrap draws (1000), so adding a row changes no other row; values differ slightly from earlier versions of this table for that reason.
 
 ### Detectors (online; day D observed at end of D; retrain effective D+1)
 
@@ -190,7 +194,7 @@ Files: `results/demand/mlp_ridge/protocol/metrics_by_month.csv` (every model × 
 - Input change without harm: detrended monthly correlation with the error ratio only 0.23 (shape) / 0.25 (weather); weather novelty peaked Nov–Dec 2019 (heat/bushfire season) while the error ratio was low (0.47–0.63).
 - Events (dates to verify against official sources before citing): NSW COVID-19 restrictions 31 Mar–15 May 2020 → error ratio Apr 0.89 vs Mar/May 0.60, shape detector flat (supporting evidence, error detector only); Greater Sydney lockdown 26 Jun–11 Oct 2021 → ratio 1.14 in Sep but every spring rises and the shape detector fell (coincidence in time, inconclusive).
 
-## 6. Adaptation (selected model = MLP, budget 6 retrains, 4-year windows)
+## 6. Adaptation (selected model = MLP, budget 6 retrains; strategies below use 4-year windows, the window length is compared at the end)
 File: `results/demand/mlp_ridge/drift/strategies.csv`, `strategies_v2.csv`.
 
 | Strategy | Retrains | Full MAPE |
@@ -208,7 +212,25 @@ File: `results/demand/mlp_ridge/drift/strategies.csv`, `strategies_v2.csv`.
 - v2 is a second iteration designed after v1 failed (say so in the report). Pacing: minimum gap = days left / (retrains left + 1).
 - Recalibrated error thresholds rose 0.371 → 0.527: even a freshly retrained model's error relative to the baseline grows over time (the task got harder), so a fixed threshold cannot tell "model aged" from "conditions harder".
 - With pacing, retrains happen within weeks of the evenly spaced dates (e.g. 2016-10-02 vs 2016-09-09): under continuous drift the detector is almost always on.
-- Final strategy: periodic retraining on the last four years (simple, equal to the best detector-based variant).
+- Final strategy (**adopted 2026-11-14**): periodic retraining, now on the previous **six** years (window-length test below, same rule as the teammate's); periodic beats the detector-triggered variants or ties with the best of them, and is simpler. Periodic 6-year: 2015–24 2.29, 2025–26 3.00, full 2.40 (MAE 182 MW).
+
+### Window length of the periodic retraining (MLP; same design and rule as the teammate's N-BEATSx test, experiment log §20)
+Files: `results/demand/mlp_ridge/window_length/comparison.csv`, `bootstrap_vs_4years.csv`, `by_year_vs_4years.csv` (script `run_window_length.py`).
+Refit dates unchanged (1 Jan 2017/19/21/23/25); each refit uses the previous L calendar years; 2015–16 use the frozen model for every L; epochs keep the 4-year number of gradient updates (55 × 4 / L: 110, 73, 55, 37; all history 31/24/20/17/15); 5 seeds. The 4-year re-run reproduces `run_protocol.py` exactly (2.508, mean |diff| 0.000 %). Rule fixed beforehand: switch only if the 2017–24 paired day-block bootstrap interval vs 4 years lies entirely below 0; 2025–26 reported only, and a significant deterioration there vetoes a switch.
+
+| Window | 2017–24 | 2017–24 midday | 2025–26 | 2025–26 midday | 2015–26 | vs 4 years, 2017–24 | vs 4 years, 2025–26 |
+|---|---|---|---|---|---|---|---|
+| 2 years | 2.903 | 5.81 | 3.168 | 6.63 | 2.736 | +0.308 [+0.274, +0.341] | +0.123 [+0.061, +0.182] |
+| 3 years | 2.781 | 5.46 | 3.106 | 6.62 | 2.644 | +0.186 [+0.166, +0.206] | +0.061 [+0.014, +0.108] |
+| 4 years (current) | 2.595 | 4.97 | 3.045 | 6.59 | 2.508 | – | – |
+| **6 years** | **2.447** | **4.46** | **2.995** | 6.51 | **2.401** | **−0.148 [−0.168, −0.128]** | −0.050 [−0.100, −0.005] |
+| all history | 2.378 | 4.37 | 3.162 | 6.68 | 2.380 | −0.217 [−0.244, −0.189] | **+0.118 [+0.049, +0.185]** |
+
+- Shorter windows are clearly worse: more data matters more than staying close to the newest demand shape.
+- All history is best on 2017–24 but significantly worse in 2025–26 (old load shapes drag the recent forecasts) → vetoed, as for N-BEATSx (+0.229).
+- 6 years is better than 4 years in every year 2017–2026 (−0.03 … −0.34 pp), most at midday, and also in 2025–26 → the rule says switch the MLP to 6-year windows.
+- Same rule, different outcome for N-BEATSx (8 networks: 2017–24 −0.109, but 2025–26 +0.071 [+0.019, +0.122] → stays at 4 years). The teammate expected the MLP to be less sensitive because of its 7-day level scaling; the opposite holds.
+- **Adopted (2026-11-14):** refits on the previous 6 years with 37 epochs; Stage 3 on 2020-11-01 … 2026-10-31 (37 epochs); still 6 retrains in total. Package, live-week replay (§9), metric tables and the monthly-interval figure are updated. The detector-triggered strategies above were compared at a fixed 4-year window, so that comparison stays internally consistent.
 
 ## 7. Day types
 Files: `results/demand/mlp_ridge/daytypes/*`; figure `results/demand/mlp_ridge/daytypes/fig_daytypes.png`.
@@ -222,29 +244,30 @@ Files: `results/demand/mlp_ridge/daytypes/*`; figure `results/demand/mlp_ridge/d
 - Same representation and reference period as the input detector (both are distances from the 2010–13 shape space).
 
 ## 8. Stage 3 and the package
-- Package `submission_mlp/`: 5-seed MLP trained on 2022-11-01 … 2026-10-31 (1461 days), 55 epochs; artifacts 3.6 MB; `train.py` 7.8 min on this machine (while other jobs ran).
+- Package `submission_mlp/`: 5-seed MLP trained on **2020-11-01 … 2026-10-31 (2191 days, 6-year window), 37 epochs**; artifacts 3.6 MB; `train.py` 68 s on 4 CPU threads (Python 3.11). (Earlier 4-year version: 2022-11-01 … 2026-10-31, 55 epochs.)
 - Feature code shared by train.py and model.py; equal to the experiment features to 5e-13.
-- `check_submission.py`: 14/14 days ok, init 0.1–0.3 s, predict 1.1–2.5 s; in-sample MAPE 1.81 (baseline 7.12).
-- Out-of-sample end-to-end check (train to 2024-12-31 in Python 3.11, predict 134 days of 2025–26 one at a time): 3.316% vs 3.284% for the experiment (Python 3.13); forecasts differ by 0.33% on average.
+- `check_submission.py` (6-year package): 14/14 days ok, init ≤ 0.1 s, predict ≈ 0.6–1 s; in-sample MAPE 2.14 (baseline 7.12; 4-year package was 1.81 — the 14 checked days are inside both training windows, so this is no guide to live performance). Peak memory of a predict call ≈ 0.3 GB.
+- Out-of-sample end-to-end check (`check_package_oos.py`: train the package to 2024-12-31 in Python 3.11, predict 134 days of 2025–26 one at a time as in marking): 6-year package **3.254 %** vs 3.241 % for the matching experiment fit (Python 3.13), forecasts differ by 0.31 % on average; the earlier 4-year package gave 3.316 % vs 3.284 %.
 - Fallback: any failure in predict returns the yesterday baseline for that output instead of a failed day.
 - Price direction is a placeholder (yesterday baseline) until the price model is merged.
 
 ## 9. Live-week forecast (7–13 Dec 2026)
-Files: `results/demand/mlp_ridge/liveweek/weeks.csv`; figure `results/demand/mlp_ridge/liveweek/fig_liveweek.png` (scripts `run_liveweek.py`, `plot_liveweek.py`).
+Files: `results/demand/mlp_ridge/liveweek/weeks_6years.csv` (selected 6-year window; the earlier 4-year replay is `weeks_4years.csv`); figure `results/demand/mlp_ridge/liveweek/fig_liveweek.png` (scripts `run_liveweek.py 6`, `plot_liveweek.py`).
 
-- Replay of the live situation for every year Y = 2015…2025: MLP (5 seeds, 55 epochs, same as the package) trained on the four years up to 31 Oct Y, then the Monday–Sunday weeks of December Y ending by 21 Dec are predicted. Distance from training end: 31–45 days (live week: 37 days, 7 Dec 2026 − 31 Oct 2026).
+- Replay of the live situation for every year Y = 2015…2025: MLP exactly as the package (5 seeds, 6-year window, 37 epochs) trained on the six years up to 31 Oct Y, then the Monday–Sunday weeks of December Y ending by 21 Dec are predicted. Distance from training end: 31–45 days (live week: 37 days, 7 Dec 2026 − 31 Oct 2026).
 - Analogue week = the week starting on the Monday between 7 and 13 Dec (one per year):
 
 | Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| MLP MAPE | 1.55 | 2.25 | 1.98 | 1.96 | 2.42 | 2.44 | 2.90 | 3.52 | 3.15 | 2.81 | 3.26 |
+| MLP MAPE (6-year window) | 1.39 | 2.04 | 1.77 | 2.21 | 2.46 | 2.15 | 2.79 | 3.19 | 3.08 | 2.59 | 3.32 |
 | Baseline MAPE | 7.82 | 10.11 | 8.14 | 4.16 | 6.21 | 5.68 | 7.19 | 6.94 | 8.38 | 6.87 | 8.24 |
-| I (%) | 80.2 | 77.8 | 75.7 | 53.0 | 61.1 | 57.1 | 59.7 | 49.2 | 62.4 | 59.1 | 60.5 |
+| I (%) | 82.2 | 79.8 | 78.3 | 46.9 | 60.4 | 62.2 | 61.2 | 54.0 | 63.2 | 62.3 | 59.7 |
+| (4-year window, for reference: MLP MAPE) | 1.55 | 2.25 | 1.98 | 1.96 | 2.42 | 2.44 | 2.90 | 3.52 | 3.15 | 2.81 | 3.26 |
 
-- All 23 December weeks: MLP MAPE median 2.42 [1.41, 4.77]; I median 62.4 [49.2, 80.2]. Analogue weeks 2021–2025: MAPE median 3.15 [2.81, 3.52], I median 59.7 [49.2, 62.4].
-- Trend of analogue-week MAPE: +0.16 pp per year; linear extrapolation to 2026: **3.5 ± 0.6 %** (± 2 residual s.d., i.e. roughly 2.9–4.2 %).
-- I has no trend after 2018 (49–62 %): the baseline gets harder at about the same rate as the model (more PV variability from day to day). Expected live I ≈ 50–60 %.
-- Worst December week: 1–7 Dec 2025, MLP 4.77 but baseline 11.52 (I 58.6): a hard week for the model is also hard for the baseline, so I is more stable than MAPE.
+- All 23 December weeks: MLP MAPE median 2.26 [1.38, 4.35]; I median 63.2 [46.9, 82.2]. Analogue weeks 2021–2025: MAPE median 3.08 [2.59, 3.32], I median 61.2 [54.0, 63.2]. The 6-year window is better than the 4-year window in 15 of the 23 December weeks (mean −0.06 pp).
+- Trend of analogue-week MAPE: +0.16 pp per year; linear extrapolation to 2026: **3.4 ± 0.6 %** (± 2 residual s.d., i.e. roughly 2.9–4.0 %; 4-year window: 3.5 ± 0.6 %).
+- I has no trend after 2018 (47–63 %): the baseline gets harder at about the same rate as the model (more PV variability from day to day). Expected live I ≈ 50–63 %, above the 40 % needed for full live marks in every replayed year.
+- Worst December week: 1–7 Dec 2025, MLP 4.35 but baseline 11.52 (I 62.2): a hard week for the model is also hard for the baseline, so I is more stable than MAPE.
 - 7–13 Dec 2026 contains no NSW public holiday and is before the 22 Dec Christmas flag, so the holiday and Christmas features stay off.
 - Caveats: the extrapolation assumes the drift continues at the same pace; the replay uses reanalysis weather (see section 10); 11 analogue weeks only.
 

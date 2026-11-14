@@ -5,7 +5,8 @@ period: MAPE and MAE"; "Report the frozen and adapted models separately, by year
 monthly error with 95% intervals computed two ways (Appendix A).
 
 Models: MLP, Ridge (+VIC/QLD), LightGBM (reproduction), N-BEATSx (3-seed mean), each frozen
-(fit 2010-2014) and periodic (refits 1 Jan 2017/19/21/23/25 on the previous four years);
+(fit 2010-2014) and periodic (refits 1 Jan 2017/19/21/23/25 on the previous four years), plus the
+selected MLP strategy "periodic 6y" (same refit dates, previous six years; run_window_length.py);
 baselines: same half-hour yesterday (day D) and same half-hour last week (day D-6).
 Monthly intervals: (a) half-hours independent, MAPE +/- 1.96 s / sqrt(n); (b) day-block
 bootstrap, 1000 draws (whole days resampled within the month).
@@ -68,6 +69,13 @@ series = []                                            # (model, strategy, stage
 for name, key in MODELS.items():
     for kind in ("frozen", "periodic"):
         series.append((name, kind, strategy(key, "stage1"), strategy(key, kind)))
+        if name == "MLP" and kind == "periodic":
+            # selected strategy: periodic refits on the previous 6 years (run_window_length.py)
+            wz = np.load(os.path.join(F.OUT_ROOT, "window_length", "predictions_window.npz"))
+            p6 = z["mlp|frozen"].copy()
+            for y0 in RETRAINS:
+                p6[yr >= y0] = wz[f"6 years|{y0}"][yr >= y0]
+            series.append((name, "periodic 6y (selected)", strategy(key, "stage1"), p6))
 for name, pred in BASE.items():
     series.append((name, "-", pred, pred))
 
@@ -79,8 +87,8 @@ def metrics(pred, m):
 
 PERIODS = {"2015-24": (yr >= 2015) & (yr <= 2024), "2025-26": yr >= 2025, "2015-26": yr >= 2015}
 summ, by_year, by_month = [], [], []
-rng = np.random.default_rng(0)
 for name, kind, p1, pred in series:
+    rng = np.random.default_rng(0)              # same draws for every series: adding one changes no other
     r = {"model": name, "strategy": kind}
     for k, v in metrics(p1, yr == 2014).items():
         r[f"val 2014 {k}"] = v

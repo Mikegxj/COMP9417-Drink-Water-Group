@@ -1,15 +1,19 @@
 """Evidence for the live-week forecast (7-13 Dec 2026, Monday to Sunday).
 
-The final package is trained on the four years up to 31 Oct 2026 and then predicts a week in
-December. This replays that exact situation for every earlier year Y = 2015..2025: train the
-MLP (5 seeds, 55 epochs) on target days in (31 Oct Y - 4 years, 31 Oct Y], then predict the
+The final package is trained on the last W years up to 31 Oct 2026 (W = 6, the selected window;
+see run_window_length.py) and then predicts a week in December. This replays that exact situation
+for every earlier year Y = 2015..2025: train the MLP (5 seeds; epochs = round(55 * 4 / W), the
+gradient-update count of the 4-year Stage 1 setting) on target days in (31 Oct Y - W years,
+31 Oct Y], then predict the
 Monday-Sunday weeks of December Y that end by 21 Dec (before the Christmas period). The week
 starting on the Monday between 7 and 13 Dec is the closest analogue of the live week.
 Reports weekly MAPE of the MLP and of the same-half-hour-yesterday baseline, the improvement
 I = 100 (1 - MAPE_model / MAPE_baseline) used in the live marking, and a trend over years.
-Outputs: outputs/liveweek/weeks.csv.
+Usage: python run_liveweek.py [W]   (default 6; W = 4 reproduces the earlier 4-year replay)
+Outputs: outputs/liveweek/weeks_{W}years.csv.
 """
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -35,13 +39,16 @@ X = F.mlp_matrix(arr, cal, L, idx)
 truth = Y[idx]
 yday = Y[idx - 1]
 YEARS = range(2015, 2026)
+W = int(sys.argv[1]) if len(sys.argv) > 1 else 6
+EPOCHS = int(round(55 * 4 / W))
+print(f"window {W} years, {EPOCHS} epochs", flush=True)
 
 jobs = []
 for y in YEARS:
     end = pd.Timestamp(f"{y}-10-31")
-    train = np.asarray((d_idx > end - pd.DateOffset(years=4)) & (d_idx <= end))
+    train = np.asarray((d_idx > end - pd.DateOffset(years=W)) & (d_idx <= end))
     jobs += [(y, s, train) for s in range(5)]
-res = Parallel(n_jobs=8, verbose=10)(delayed(M.mlp_fit_predict)(X, R, tr, s, 55) for y, s, tr in jobs)
+res = Parallel(n_jobs=6, verbose=10)(delayed(M.mlp_fit_predict)(X, R, tr, s, EPOCHS) for y, s, tr in jobs)
 pred = {y: np.mean([r for (y_, s, _), r in zip(jobs, res) if y_ == y], axis=0) * Lr for y in YEARS}
 
 
@@ -61,7 +68,7 @@ for y in YEARS:
                      "MLP MAPE": mape(pred[y], m), "baseline MAPE": bm,
                      "I (%)": 100 * (1 - mape(pred[y], m) / bm)})
 wk = pd.DataFrame(rows)
-wk.to_csv(os.path.join(OUT, "weeks.csv"), index=False)
+wk.to_csv(os.path.join(OUT, f"weeks_{W}years.csv"), index=False)
 print(wk.round(2).to_string(index=False))
 
 a = wk[wk["analogue (Mon 7-13 Dec)"]]
