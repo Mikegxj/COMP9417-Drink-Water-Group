@@ -1,0 +1,6 @@
+模型 / 策略,重训次数,Accuracy (%),Balanced Accuracy (%)
+相对电价 XGBoost：全期冻结,0,72.28,69.6
+相对电价 XGBoost：每两年重训,6,77.72,76.62
+相对电价 XGBoost：误差触发重训,6,73.11,71.17
+Yesterday baseline,0,73.81,73.42
+Last week baseline,0,70.81,70.42
